@@ -8,22 +8,8 @@ class Robot:
         """
         self.robot = PiBot.PiBot()
         self.shutdown = False
-        self.front_right_laser = 0
-        self.front_left_laser = 0
         self.front_middle_laser = 0
-        self.distance_sensor = 0
-        self.first_line_sensor_from_right = 0
-        self.second_line_sensor_from_right = 0
-        self.third_line_sensor_from_right = 0
-        self.first_line_sensor_from_left = 0
-        self.second_line_sensor_from_left = 0
-        self.third_line_sensor_from_left = 0
-        self.left_straight_ir = 0
-        self.left_diagonal_ir = 0
-        self.left_side_ir = 0
-        self.right_straight_ir = 0
-        self.right_diagonal_ir = 0
-        self.right_side_ir = 0
+        self.state = "unknown"
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """
@@ -41,8 +27,7 @@ class Robot:
         Returns:
           The current state as a string.
         """
-        # Your code here...
-        pass
+        return self.state
 
     def sense(self):
         """
@@ -51,23 +36,7 @@ class Robot:
         Returns:
           None
         """
-        # Write some code here...
-        self.front_right_laser = self.robot.get_front_right_laser()
-        self.front_left_laser = self.robot.get_front_left_laser()
         self.front_middle_laser = self.robot.get_front_middle_laser()
-        self.distance_sensor = self.robot.get_distance_sensor()
-        self.first_line_sensor_from_right = self.robot.get_rightmost_line_sensor()
-        self.second_line_sensor_from_right = self.robot.get_second_line_sensor_from_right()
-        self.third_line_sensor_from_right = self.robot.get_third_line_sensor_from_right()
-        self.first_line_sensor_from_left = self.robot.get_leftmost_line_sensor()
-        self.second_line_sensor_from_left = self.robot.get_second_line_sensor_from_left()
-        self.third_line_sensor_from_left = self.robot.get_third_line_sensor_from_left()
-        self.left_straight_ir = self.robot.get_rear_left_straight_ir()
-        self.left_diagonal_ir = self.robot.get_rear_left_diagonal()
-        self.left_side_ir = self.robot.get_rear_left_side_ir()
-        self.right_straight_ir = self.robot.get_rear_right_straight_ir()
-        self.right_diagonal_ir = self.robot.get_rear_right_diagonal_ir()
-        self.right_side_ir = self.robot.get_rear_right_side_ir()
 
     def plan(self):
         """
@@ -76,8 +45,16 @@ class Robot:
         Returns:
           None
         """
-        # Write some code here...
-        pass
+        if self.front_middle_laser <= 0.5:
+            self.state = 'close'
+        if 1.5 >= self.front_middle_laser > 0.5:
+            self.state = 'ok'
+        if self.front_middle_laser > 1.5:
+            self.state = 'far'
+        if self.front_middle_laser >= 2.0:
+            self.state = 'very far'
+        else:
+            self.state = 'unknown'
 
     def spin(self):
         """
@@ -89,6 +66,7 @@ class Robot:
             if self.robot.get_time() > 20:
                 self.sense()
                 self.plan()
+                self.get_state()
                 self.shutdown = True
 
     # Add more code...
@@ -125,4 +103,4 @@ def test():
 
 
 if __name__ == "__main__":
-    main()
+        main()
