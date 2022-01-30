@@ -18,6 +18,12 @@ class Robot:
         self.first_line_sensor_from_left = 0
         self.second_line_sensor_from_left = 0
         self.third_line_sensor_from_left = 0
+        self.left_straight_ir = 0
+        self.left_diagonal_ir = 0
+        self.left_side_ir = 0
+        self.right_straight_ir = 0
+        self.right_diagonal_ir = 0
+        self.right_side_ir = 0
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """
@@ -47,7 +53,22 @@ class Robot:
         Function to get sensors data.
         :return:
         """
-        return None
+        self.front_right_laser = self.robot.get_front_right_laser()
+        self.front_left_laser = self.robot.get_front_left_laser()
+        self.front_middle_laser = self.robot.get_front_middle_laser()
+        self.distance_sensor = self.robot.get_distance_sensor()
+        self.first_line_sensor_from_right = self.robot.get_rightmost_line_sensor()
+        self.second_line_sensor_from_right = self.robot.get_second_line_sensor_from_right()
+        self.third_line_sensor_from_right = self.robot.get_third_line_sensor_from_right()
+        self.first_line_sensor_from_left = self.robot.get_leftmost_line_sensor()
+        self.second_line_sensor_from_left = self.robot.get_second_line_sensor_from_left()
+        self.third_line_sensor_from_left = self.robot.get_third_line_sensor_from_left()
+        self.left_straight_ir = self.robot.get_rear_left_straight_ir()
+        self.left_diagonal_ir = self.robot.get_rear_left_diagonal()
+        self.left_side_ir = self.robot.get_rear_left_side_ir()
+        self.right_straight_ir = self.robot.get_rear_right_straight_ir()
+        self.right_diagonal_ir = self.robot.get_rear_right_diagonal_ir()
+        self.right_side_ir = self.robot.get_rear_right_side_ir()
 
     def plan(self):
         """
