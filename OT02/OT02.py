@@ -45,13 +45,13 @@ class Robot:
         Returns:
           None
         """
-        if self.front_middle_laser <= 0.5:
+        if 0 < self.front_middle_laser <= 0.5:
             self.state = 'close'
-        if 1.5 > self.front_middle_laser > 0.5:
+        elif 1.5 >= self.front_middle_laser > 0.5:
             self.state = 'ok'
-        if self.front_middle_laser > 1.5:
+        elif 2.0 > self.front_middle_laser > 1.5:
             self.state = 'far'
-        if self.front_middle_laser >= 2.0:
+        elif self.front_middle_laser >= 2.0:
             self.state = 'very far'
         else:
             self.state = 'unknown'
@@ -103,4 +103,5 @@ def test():
 
 
 if __name__ == "__main__":
-        main()
+        test()
+        #main()
