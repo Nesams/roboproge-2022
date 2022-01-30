@@ -47,7 +47,7 @@ class Robot:
         """
         if self.front_middle_laser <= 0.5:
             self.state = 'close'
-        if 1.5 >= self.front_middle_laser > 0.5:
+        if 1.5 > self.front_middle_laser > 0.5:
             self.state = 'ok'
         if self.front_middle_laser > 1.5:
             self.state = 'far'
