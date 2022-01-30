@@ -8,6 +8,16 @@ class Robot:
         """
         self.robot = PiBot.PiBot()
         self.shutdown = False
+        self.front_right_laser = 0
+        self.front_left_laser = 0
+        self.front_middle_laser = 0
+        self.distance_sensor = 0
+        self.first_line_sensor_from_right = 0
+        self.second_line_sensor_from_right = 0
+        self.third_line_sensor_from_right = 0
+        self.first_line_sensor_from_left = 0
+        self.second_line_sensor_from_left = 0
+        self.third_line_sensor_from_left = 0
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """
@@ -32,7 +42,25 @@ class Robot:
             if self.robot.get_time() > 20:
                 self.shutdown = True
 
-    # Add more code...
+    def sense(self):
+        """
+        Function to get sensors data.
+        :return:
+        """
+        return None
+
+    def plan(self):
+        """
+        Function that analyzes data.
+        :return:
+        """
+        return None
+
+    def act(self):
+        """
+        Function that moves the Robot.
+        :return:
+        """
 
 
 def main():
