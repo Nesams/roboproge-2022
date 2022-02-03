@@ -44,6 +44,8 @@ class Robot:
 
     def sense(self):
         """Read the sensor values from the PiBot API."""
+        print(self.robot.get_rigt_wheel_encoder())
+        print(self.robot.get_left_wheel_encoder())
         self.right_history.append(self.robot.get_right_wheel_encoder())
         self.left_history.append(self.robot.get_left_wheel_encoder())
         self.reading_times.append(self.robot.get_time())
