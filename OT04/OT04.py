@@ -38,24 +38,10 @@ class Robot:
             else:
                 line_exists.append(0)
 
-        if line_exists[0] == 1:
+        if line_exists[0:3].count(1) > line_exists[3:].count(1) or line_exists[2] == 1:
             self.last_position = 1
             return 1
-        if line_exists[-1] == 1:
-            self.last_position = -1
-            return -1
-        if line_exists.count(1) == 0:
-            return self.last_position
-        else:
-            return 0
-
-
-        if line_exists.count(1) == 1 and (line_exists[3] == 1 or line_exists[4] == 1):
-            return 0
-        if line_exists[0:3].count(1) > line_exists[3:].count(1):
-            self.last_position = 1
-            return 1
-        if line_exists[0:3].count(1) < line_exists[3:].count(1):
+        if line_exists[0:3].count(1) < line_exists[3:].count(1) or line_exists[3] == 1:
             self.last_position = -1
             return -1
         if line_exists.count(1) == 0:
