@@ -16,6 +16,7 @@ class Robot:
         self.second_from_right = 0
         self.rightmost = 0
         self.line_directions = [self.leftmost, self.second_from_left, self.third_from_right, self.third_from_left, self.second_from_right, self.rightmost]
+        self.last_position = None
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set robot reference."""
@@ -39,7 +40,22 @@ class Robot:
            0: Robot is on the line (i.e., the robot should not turn to stay on the line) or no sensor info
            1: Line is on the left (i.e., the robot should turn left to reach the line again)
         """
-        return self.line_directions
+        left_part = sum(self.line_directions[0:2])
+        mid_part = sum(self.line_directions[3:5])
+        right_part = sum(self.line_directions[4:])
+        if left_part < mid_part and left_part < right_part:
+            self.last_position = 1
+            return 1
+        if right_part < mid_part and right_part < left_part:
+            self.last_position = -1
+            return -1
+        if mid_part < right_part and mid_part < left_part:
+            self.last_position = 0
+            return 0
+        else:
+            return self.last_position
+
+
 
     def spin(self):
         """The main spin loop."""
