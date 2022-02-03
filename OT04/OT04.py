@@ -33,7 +33,7 @@ class Robot:
         """
         line_exists = []
         for sensor in self.line_directions:
-            if sensor <= 400:
+            if sensor <= 400.0:
                 line_exists.append(1)
             else:
                 line_exists.append(0)
