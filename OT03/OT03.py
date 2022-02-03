@@ -28,6 +28,8 @@ class Robot:
         """
         left_change = self.left_history[-1] - self.left_history[-2]
         time_change = self.reading_times[-1] - self.reading_times[-2]
+        if time_change == 0:
+            return 0
         return (left_change / time_change) * (self.robot.WHEEL_DIAMETER / 180)
 
 
@@ -44,8 +46,6 @@ class Robot:
 
     def sense(self):
         """Read the sensor values from the PiBot API."""
-        print(self.robot.get_right_wheel_encoder())
-        print(self.robot.get_left_wheel_encoder())
         self.right_history.append(self.robot.get_right_wheel_encoder())
         self.left_history.append(self.robot.get_left_wheel_encoder())
         self.reading_times.append(self.robot.get_time())
