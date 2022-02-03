@@ -41,7 +41,7 @@ class Robot:
         if line_exists[0] == 1:
             self.last_position = 1
             return 1
-        if line_exists[5] == 1:
+        if line_exists[-1] == 1:
             self.last_position = -1
             return -1
         if line_exists.count(1) == 0:
