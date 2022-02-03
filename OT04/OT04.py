@@ -38,17 +38,28 @@ class Robot:
             else:
                 line_exists.append(0)
 
-        if line_exists[0:3].count(1) > line_exists[3:].count(1) or line_exists[2] == 1:
+        if line_exists[0] == 1 or line_exists[1] == 1:
             self.last_position = 1
             return 1
-        if line_exists[0:3].count(1) < line_exists[3:].count(1) or line_exists[3] == 1:
-            self.last_position = -1
-            return -1
-        if line_exists.count(1) == 0:
-            return self.last_position
-        else:
+        if line_exists[2] == 1 or line_exists[3] == 1:
             self.last_position = 0
             return 0
+        if line_exists[4] == 1 or line_exists[5] == 1:
+            self.last_position = -1
+            return -1
+        else:
+            return self.last_position
+        #  if line_exists[0:3].count(1) > line_exists[3:].count(1) or line_exists[2] == 1:
+        #     self.last_position = 1
+        #     return 1
+        # if line_exists[0:3].count(1) < line_exists[3:].count(1) or line_exists[3] == 1:
+        #     self.last_position = -1
+        #     return -1
+        # if line_exists.count(1) == 0:
+        #     return self.last_position
+        # else:
+        #     self.last_position = 0
+        #     return 0
 
 
     def spin(self):
