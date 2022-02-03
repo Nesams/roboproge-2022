@@ -9,22 +9,11 @@ class Robot:
         """Class constructor."""
         self.robot = PiBot.PiBot()
         self.shutdown = False
-        self.front_right_laser = 0
-        self.front_left_laser = 0
-        self.front_middle_laser = 0
-        self.distance_sensor = 0
-        self.first_line_sensor_from_right = 0
-        self.second_line_sensor_from_right = 0
-        self.third_line_sensor_from_right = 0
-        self.first_line_sensor_from_left = 0
-        self.second_line_sensor_from_left = 0
-        self.third_line_sensor_from_left = 0
-        self.left_straight_ir = 0
-        self.left_diagonal_ir = 0
-        self.left_side_ir = 0
-        self.right_straight_ir = 0
-        self.right_diagonal_ir = 0
-        self.right_side_ir = 0
+        self.right = 0
+        self.left = 0
+        self.left_history = [0]
+        self.right_history = [0]
+        self.reading_times = [0]
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set robot reference."""
@@ -37,8 +26,9 @@ class Robot:
         Returns:
           The current wheel translational velocity in meters per second.
         """
-        # Your code here...
-        pass
+        left_change = self.left_history[-1] - self.left_history[-2]
+        time_change = self.time_change[-1] - self.time_change[-2]
+        return (left_change / time_change) * (self.robot.WHEEL_DIAMETER / 180)
 
     def get_right_velocity(self) -> float:
         """
@@ -52,22 +42,9 @@ class Robot:
 
     def sense(self):
         """Read the sensor values from the PiBot API."""
-        self.front_right_laser = self.robot.get_front_right_laser()
-        self.front_left_laser = self.robot.get_front_left_laser()
-        self.front_middle_laser = self.robot.get_front_middle_laser()
-        self.distance_sensor = self.robot.get_distance_sensor()
-        self.first_line_sensor_from_right = self.robot.get_rightmost_line_sensor()
-        self.second_line_sensor_from_right = self.robot.get_second_line_sensor_from_right()
-        self.third_line_sensor_from_right = self.robot.get_third_line_sensor_from_right()
-        self.first_line_sensor_from_left = self.robot.get_leftmost_line_sensor()
-        self.second_line_sensor_from_left = self.robot.get_second_line_sensor_from_left()
-        self.third_line_sensor_from_left = self.robot.get_third_line_sensor_from_left()
-        self.left_straight_ir = self.robot.get_rear_left_straight_ir()
-        self.left_diagonal_ir = self.robot.get_rear_left_diagonal()
-        self.left_side_ir = self.robot.get_rear_left_side_ir()
-        self.right_straight_ir = self.robot.get_rear_right_straight_ir()
-        self.right_diagonal_ir = self.robot.get_rear_right_diagonal_ir()
-        self.right_side_ir = self.robot.get_rear_right_side_ir()
+        self.right = self.robot.get_right_wheel_encoder()
+        self.left = self.robot.get_left_wheel_encoder()
+        self.reading_times.append(self.robot.get_time())
 
     def spin(self):
         """Main loop."""
