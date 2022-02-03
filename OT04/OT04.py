@@ -34,10 +34,10 @@ class Robot:
         left_part = sum(self.line_directions[0:2])
         mid_part = sum(self.line_directions[2:4])
         right_part = sum(self.line_directions[5:])
-        if left_part < mid_part and left_part < right_part:
+        if left_part <= mid_part and left_part < right_part:
             self.last_position = 1
             return 1
-        if right_part < mid_part and right_part < left_part:
+        if right_part <= mid_part and right_part < left_part:
             self.last_position = -1
             return -1
         if mid_part < right_part and mid_part < left_part:
