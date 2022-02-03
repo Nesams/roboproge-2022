@@ -9,8 +9,6 @@ class Robot:
         """Class constructor."""
         self.robot = PiBot.PiBot()
         self.shutdown = False
-        self.right = 0
-        self.left = 0
         self.left_history = [0]
         self.right_history = [0]
         self.reading_times = [0]
@@ -42,8 +40,8 @@ class Robot:
 
     def sense(self):
         """Read the sensor values from the PiBot API."""
-        self.right = self.robot.get_right_wheel_encoder()
-        self.left = self.robot.get_left_wheel_encoder()
+        self.right_history.append(self.robot.get_right_wheel_encoder())
+        self.left_history.append(self.robot.get_left_wheel_encoder())
         self.reading_times.append(self.robot.get_time())
 
     def spin(self):
