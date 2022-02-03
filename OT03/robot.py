@@ -13,6 +13,8 @@ class Robot:
         self.right_history = [0]
         self.reading_times = [0]
 
+
+
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set robot reference."""
         self.robot = robot
@@ -25,8 +27,10 @@ class Robot:
           The current wheel translational velocity in meters per second.
         """
         left_change = self.left_history[-1] - self.left_history[-2]
-        time_change = self.time_change[-1] - self.time_change[-2]
+        time_change = self.reading_times[-1] - self.reading_times[-2]
         return (left_change / time_change) * (self.robot.WHEEL_DIAMETER / 180)
+
+
 
     def get_right_velocity(self) -> float:
         """
@@ -43,6 +47,7 @@ class Robot:
         self.right_history.append(self.robot.get_right_wheel_encoder())
         self.left_history.append(self.robot.get_left_wheel_encoder())
         self.reading_times.append(self.robot.get_time())
+
 
     def spin(self):
         """Main loop."""
