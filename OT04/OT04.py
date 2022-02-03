@@ -37,6 +37,8 @@ class Robot:
                 line_exists.append(1)
             else:
                 line_exists.append(0)
+        if len(line_exists) == 0:
+            return self.last_position
         if line_exists[2] == 1 or line_exists[3] == 1:
             self.last_position = 0
             return 0
