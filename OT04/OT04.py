@@ -9,6 +9,13 @@ class Robot:
         """Class initialization."""
         self.robot = PiBot.PiBot()
         self.shutdown = False
+        self.leftmost = 0
+        self.second_from_left = 0
+        self.third_from_left = 0
+        self.third_from_right = 0
+        self.second_from_right = 0
+        self.rightmost = 0
+        self.line = [self.leftmost, self.second_from_left, self.third_from_right, self.third_from_left, self.second_from_right, self.rightmost]
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set robot reference."""
@@ -16,8 +23,12 @@ class Robot:
 
     def sense(self):
         """Sense method as per SPA architecture."""
-        # Your code here...
-        pass
+        self.leftmost = self.robot.get_leftmost_line_sensor()
+        self.second_from_left = self.robot.get_second_line_sensor_from_left()
+        self.third_from_left = self.robot.get_third_line_sensor_from_left()
+        self.third_from_right = self.robot.get_third_line_sensor_from_right()
+        self.second_from_right = self.robot.get_second_line_sensor_from_right()
+        self.rightmost = self.robot.get_rightmost_line_sensor()
 
     def spin(self):
         """The main spin loop."""
