@@ -10,7 +10,7 @@ class Robot:
         self.robot = PiBot.PiBot()
         self.shutdown = False
         self.line_directions = []
-        self.last_position = None
+        self.last_position = 0
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set robot reference."""
@@ -22,7 +22,6 @@ class Robot:
                                 self.robot.get_third_line_sensor_from_left(), self.robot.get_third_line_sensor_from_right(),
                                 self.robot.get_second_line_sensor_from_right(), self.robot.get_rightmost_line_sensor()]
 
-
     def get_line_direction(self):
         """
         Return the direction of the line based on sensor readings.
@@ -33,8 +32,8 @@ class Robot:
            1: Line is on the left (i.e., the robot should turn left to reach the line again)
         """
         left_part = sum(self.line_directions[0:2])
-        mid_part = sum(self.line_directions[3:5])
-        right_part = sum(self.line_directions[4:])
+        mid_part = sum(self.line_directions[2:4])
+        right_part = sum(self.line_directions[5:])
         if left_part < mid_part and left_part < right_part:
             self.last_position = 1
             return 1
