@@ -40,7 +40,7 @@ class Robot:
         if right_part <= mid_part and right_part < left_part:
             self.last_position = -1
             return -1
-        if mid_part < right_part and mid_part < left_part:
+        if mid_part <= right_part and mid_part <= left_part:
             self.last_position = 0
             return 0
         else:
