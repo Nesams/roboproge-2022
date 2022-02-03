@@ -31,21 +31,18 @@ class Robot:
            0: Robot is on the line (i.e., the robot should not turn to stay on the line) or no sensor info
            1: Line is on the left (i.e., the robot should turn left to reach the line again)
         """
-        left_part = sum(self.line_directions[0:2])
-        mid_part = sum(self.line_directions[2:4])
-        right_part = sum(self.line_directions[5:])
-        if left_part <= mid_part and left_part < right_part:
-            self.last_position = 1
+        line_exists = []
+        for sensor in self.line_directions:
+            if sensor <= 400:
+                line_exists.append(1)
+            else:
+                line_exists.append(0)
+        if line_exists[0:3].count(1) > line_exists[3:].count(1):
             return 1
-        if right_part <= mid_part and right_part < left_part:
-            self.last_position = -1
+        if line_exists[0:3].count(1) < line_exists[3:].count(1):
             return -1
-        if mid_part <= right_part and mid_part <= left_part:
-            self.last_position = 0
-            return 0
         else:
-            return self.last_position
-
+            return 0
 
 
     def spin(self):
