@@ -11,7 +11,7 @@ class Robot:
         self.shutdown = False
         self.line_directions = []
         self.last_position = 0
-        self.speed = 3
+        self.speed = 11
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set robot reference."""
@@ -61,6 +61,7 @@ class Robot:
                 line_exists.append(1)
             else:
                 line_exists.append(0)
+        print(line_exists)
         if len(line_exists) == 0:
             return self.last_position
         if line_exists[2] == 1 or line_exists[3] == 1:
@@ -73,6 +74,7 @@ class Robot:
             self.last_position = -1
             return -1
         else:
+            print('else')
             return self.last_position
 
     def move_forward(self):
@@ -98,14 +100,14 @@ class Robot:
         while not self.shutdown:
             timestamp = self.robot.get_time()
             self.sense()
-            self.plan()
             res = self.get_line_direction()
             if res == 0:
                 self.move_forward()
             if res == 1:
-                self.move_right()
-            else:
                 self.move_left()
+            else:
+                self.move_right()
+
 
 
 
