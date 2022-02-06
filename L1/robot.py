@@ -26,25 +26,24 @@ class Robot:
     def plan(self):
         """Plan method."""
         i = 0
-        self.robot.set_right_wheel_speed(30)
-        self.robot.set_left_wheel_speed(30)
+        self.robot.set_right_wheel_speed(7)
+        self.robot.set_left_wheel_speed(7)
         while i < 2420:
             i += 1
             self.robot.sleep(0.01)
             if self.line_directions[-1] > 400:
-                self.robot.set_left_wheel_speed(50)
+                self.robot.set_left_wheel_speed(12)
             else:
-                self.robot.set_left_wheel_speed(30)
+                self.robot.set_left_wheel_speed(7)
             if self.line_directions[0] > 400:
-                self.robot.set_right_wheel_speed(50)
+                self.robot.set_right_wheel_speed(12)
             else:
-                self.robot.set_right_wheel_speed(30)
+                self.robot.set_right_wheel_speed(7)
             if self.robot.get_second_line_sensor_from_left() > 400:
-                self.robot.set_right_wheel_speed(50)
+                self.robot.set_right_wheel_speed(12)
             else:
-                self.robot.set_right_wheel_speed(30)
+                self.robot.set_right_wheel_speed(7)
         self.robot.set_wheels_speed(0)
-
 
     def get_line_direction(self):
         """
@@ -107,9 +106,6 @@ class Robot:
                 self.move_left()
             else:
                 self.move_right()
-
-
-
 
 
 def main():
