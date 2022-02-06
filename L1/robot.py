@@ -26,23 +26,23 @@ class Robot:
     def plan(self):
         """Plan method."""
         i = 0
-        self.robot.set_right_wheel_speed(2)
-        self.robot.set_left_wheel_speed(2)
+        self.robot.set_right_wheel_speed(13)
+        self.robot.set_left_wheel_speed(13)
         while i < 2420:
             i += 1
-            self.robot.sleep(0.001)
+            self.robot.sleep(0.05)
             if self.line_directions[-1] > 400:
-                self.robot.set_left_wheel_speed(5)
+                self.robot.set_left_wheel_speed(13)
             else:
-                self.robot.set_left_wheel_speed(3)
+                self.robot.set_left_wheel_speed(9)
             if self.line_directions[0] > 400:
-                self.robot.set_right_wheel_speed(5)
+                self.robot.set_right_wheel_speed(13)
             else:
-                self.robot.set_right_wheel_speed(3)
+                self.robot.set_right_wheel_speed(9)
             if self.robot.get_second_line_sensor_from_left() > 400:
-                self.robot.set_right_wheel_speed(5)
+                self.robot.set_right_wheel_speed(13)
             else:
-                self.robot.set_right_wheel_speed(3)
+                self.robot.set_right_wheel_speed(9)
         self.robot.set_wheels_speed(0)
 
     def get_line_direction(self):
@@ -79,19 +79,19 @@ class Robot:
     def move_forward(self):
         """Act method for moving forward."""
         self.robot.set_wheels_speed(self.speed)
-        self.robot.sleep(0.02)
+        self.robot.sleep(0.05)
         self.robot.set_wheels_speed(0)
 
     def move_right(self):
         """Act method for moving right."""
         self.robot.set_left_wheel_speed(self.speed)
-        self.robot.sleep(0.02)
+        self.robot.sleep(0.05)
         self.robot.set_left_wheel_speed(0)
 
     def move_left(self):
         """Act method for moving left."""
         self.robot.set_right_wheel_speed(self.speed)
-        self.robot.sleep(0.02)
+        self.robot.sleep(0.05)
         self.robot.set_right_wheel_speed(0)
 
     def spin(self):
