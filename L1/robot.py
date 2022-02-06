@@ -30,7 +30,7 @@ class Robot:
         self.robot.set_left_wheel_speed(4)
         while i < 2420:
             i += 1
-            self.robot.sleep(0.01)
+            self.robot.sleep(0.1)
             if self.line_directions[-1] > 400:
                 self.robot.set_left_wheel_speed(10)
             else:
