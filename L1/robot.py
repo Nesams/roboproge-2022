@@ -34,15 +34,15 @@ class Robot:
             if self.line_directions[-1] > 400:
                 self.robot.set_left_wheel_speed(12)
             else:
-                self.robot.set_left_wheel_speed(7)
+                self.robot.set_left_wheel_speed(5)
             if self.line_directions[0] > 400:
                 self.robot.set_right_wheel_speed(12)
             else:
-                self.robot.set_right_wheel_speed(7)
+                self.robot.set_right_wheel_speed(5)
             if self.robot.get_second_line_sensor_from_left() > 400:
                 self.robot.set_right_wheel_speed(12)
             else:
-                self.robot.set_right_wheel_speed(7)
+                self.robot.set_right_wheel_speed(5)
         self.robot.set_wheels_speed(0)
 
     def get_line_direction(self):
