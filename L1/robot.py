@@ -26,8 +26,8 @@ class Robot:
     def plan(self):
         """Plan method."""
         i = 0
-        self.robot.set_right_wheel_speed(5)
-        self.robot.set_left_wheel_speed(5)
+        self.robot.set_right_wheel_speed(2)
+        self.robot.set_left_wheel_speed(2)
         while i < 2420:
             i += 1
             self.robot.sleep(0.001)
