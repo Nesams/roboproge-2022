@@ -79,13 +79,13 @@ class Robot:
     def move_forward(self):
         """Act method for moving forward."""
         self.robot.set_wheels_speed(self.speed)
-        self.robot.sleep(0.07)
+        self.robot.sleep(0.007)
         self.robot.set_wheels_speed(0)
 
     def move_right(self):
         """Act method for moving right."""
         self.robot.set_left_wheel_speed(self.speed)
-        self.robot.sleep(0.07)
+        self.robot.sleep(0.04)
         self.robot.set_left_wheel_speed(0)
 
     def move_left(self):
