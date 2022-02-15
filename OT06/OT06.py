@@ -102,7 +102,7 @@ def test():
     data = close.get_data()
     robot.robot.load_data_profile(data)
     for i in range(len(data)):
-        robot.spin()
+        robot.sense()
         if robot.robot.get_front_middle_laser() < 0.5:
             print(f"laser = {robot.robot.get_front_middle_laser()}")
             print(robot.objects)
