@@ -68,17 +68,16 @@ class Robot:
         """Sense method according to the SPA architecture."""
         self.right_encoder = self.robot.get_right_wheel_encoder()
         self.left_encoder = self.robot.get_left_wheel_encoder()
-        if self.robot.get_front_middle_laser() < 0.5:
-            self.front_middle_laser = self.robot.get_front_middle_laser()
-            if self.robot.get_front_middle_laser() < 0.45 and self.object_start == 5:
-                self.object_start_and_end.append(self.get_current_angle())
-                self.object_start = self.get_front_middle_laser()
-            if self.robot.get_front_middle_laser() > self.object_start:
-                self.object_start_and_end.append(self.get_current_angle())
-                self.object_start = 5
-                object_center = sum(self.object_start_and_end) / 2
-                self.objects.append(copy.deepcopy(object_center))
-                self.object_start_and_end = []
+        self.front_middle_laser = self.robot.get_front_middle_laser()
+        if self.front_middle_laser < 0.45 and self.object_start == 5:
+            self.object_start_and_end.append(self.get_current_angle())
+            self.object_start = self.front_middle_laser
+        if self.front_middle_laser > self.object_start:
+            self.object_start_and_end.append(self.get_current_angle())
+            self.object_start = 5
+            object_center = sum(self.object_start_and_end) / 2
+            self.objects.append(copy.deepcopy(object_center))
+            self.object_start_and_end = []
 
     def spin(self):
         """The main loop."""
