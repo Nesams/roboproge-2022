@@ -83,7 +83,7 @@ class Robot:
         """The main loop."""
         while not self.shutdown:
             self.sense()
-            print(f'Value is {self.get_front_middle_laser()}')
+            print(f'Value is {self.front_middle_laser}')
             self.robot.sleep(0.05)
             if self.robot.get_time() > 20:
                 self.shutdown = True
@@ -102,9 +102,8 @@ def test():
     robot.robot.load_data_profile(data)
     for i in range(len(data)):
         robot.sense()
-        if robot.robot.get_front_middle_laser() < 0.5:
-            print(f"laser = {robot.robot.get_front_middle_laser()}")
-            print(robot.objects)
+        print(f"laser = {robot.robot.get_front_middle_laser()}")
+        print(robot.objects)
         robot.robot.sleep(0.05)
 
 
