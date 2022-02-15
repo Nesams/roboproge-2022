@@ -71,10 +71,10 @@ class Robot:
         self.front_middle_laser = self.robot.get_front_middle_laser()
         self.filter_list.append(copy.deepcopy(self.front_middle_laser))
         self.filter_list = self.filter_list[:5]
-        if self.front_middle_laser < 0.45 and self.object_start == 5:
+        if self.get_front_middle_laser() < 0.45 and self.object_start == 5:
             self.object_start_and_end.append(self.get_current_angle())
             self.object_start = self.front_middle_laser
-        if self.front_middle_laser > self.object_start:
+        if self.get_front_middle_laser() > self.object_start:
             self.object_start_and_end.append(self.get_current_angle())
             self.object_start = 5
             object_center = sum(self.object_start_and_end) / 2
