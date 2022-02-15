@@ -1,6 +1,7 @@
 """OT06 - Object Detection."""
 import copy
 import math
+import statistics
 import PiBot
 
 
@@ -13,6 +14,7 @@ class Robot:
         self.shutdown = False
         self.objects = []
         self.front_middle_laser = None
+        self.filter_list = []
         self.front_middle_laser = 0
         self.left_encoder = 0
         self.right_encoder = 0
@@ -50,11 +52,25 @@ class Robot:
         else:
             return 360 + current_angle
 
+    def get_front_middle_laser(self):
+        """
+        Return the filtered value.
+
+        Returns:
+          None if filter is empty, filtered value otherwise.
+        """
+        if not self.filter_list:
+            return None
+        else:
+            return statistics.median(self.filter_list)
+
     def sense(self):
         """Sense method according to the SPA architecture."""
         self.right_encoder = self.robot.get_right_wheel_encoder()
         self.left_encoder = self.robot.get_left_wheel_encoder()
         self.front_middle_laser = self.robot.get_front_middle_laser()
+        self.filter_list.append(copy.deepcopy(self.front_middle_laser))
+        self.filter_list = self.filter_list[:5]
         if self.front_middle_laser < 0.45 and self.object_start == 5:
             self.object_start_and_end.append(self.get_current_angle())
             self.object_start = self.front_middle_laser
@@ -69,7 +85,7 @@ class Robot:
         """The main loop."""
         while not self.shutdown:
             self.sense()
-            print(f'Value is {self.front_middle_laser}')
+            print(f'Value is {self.get_front_middle_laser()}')
             self.robot.sleep(0.05)
             if self.robot.get_time() > 20:
                 self.shutdown = True
