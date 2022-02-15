@@ -48,9 +48,9 @@ class Robot:
         wheel_distance = self.wheel_circumference / 360 * self.right_encoder
         current_angle = wheel_distance * 360 * self.circle
         if current_angle > 0:
-            return current_angle
+            return current_angle -100
         else:
-            return 360 + current_angle
+            return 360 + current_angle - 100
 
     def get_front_middle_laser(self):
         """
