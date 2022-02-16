@@ -42,6 +42,15 @@ class Robot:
           the right-hand rule (e.g., turning left 90 degrees is 90, turning
           right 90 degrees is 270 degrees).
         """
+        if self.get_front_middle_laser() <= 0.5:
+            if self.get_front_middle_laser() <= 0.45:
+                if self.get_front_middle_laser() < self.last_laser_reading:
+                    self.objects.append(self.get_current_angle())
+                    self.last_laser_reading = self.front_middle_laser
+                if self.get_front_middle_laser() > self.last_laser_reading:
+                    self.last_laser_reading = self.front_middle_laser
+            if self.get_front_middle_laser() >= 0.45:
+                self.last_laser_reading = self.front_middle_laser
         return self.objects
 
     def get_current_angle(self):
@@ -72,20 +81,12 @@ class Robot:
         self.front_middle_laser = self.robot.get_front_middle_laser()
         self.filter_list.append(copy.deepcopy(self.front_middle_laser))
         self.filter_list = self.filter_list[:5]
-        if self.get_front_middle_laser() <= 0.5:
-            if self.get_front_middle_laser() <= 0.45:
-                if self.get_front_middle_laser() < self.last_laser_reading:
-                    self.objects.append(self.get_current_angle())
-                    self.last_laser_reading = self.front_middle_laser
-                if self.get_front_middle_laser() > self.last_laser_reading:
-                    self.last_laser_reading = self.front_middle_laser
-            if self.get_front_middle_laser() >= 0.45:
-                self.last_laser_reading = self.front_middle_laser
 
     def spin(self):
         """The main loop."""
         while not self.shutdown:
             self.sense()
+            self.get_objects()
             print(f'Value is {self.get_front_middle_laser()}')
             self.robot.sleep(0.05)
             if self.robot.get_time() > 20:
@@ -105,6 +106,7 @@ def test():
     robot.robot.load_data_profile(data)
     for i in range(len(data)):
         robot.sense()
+        robot.get_objects()
         print(f"laser = {robot.robot.get_front_middle_laser()}")
         print(robot.objects)
         robot.robot.sleep(0.05)
