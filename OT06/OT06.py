@@ -72,14 +72,14 @@ class Robot:
         self.front_middle_laser = self.robot.get_front_middle_laser()
         self.filter_list.append(copy.deepcopy(self.front_middle_laser))
         self.filter_list = self.filter_list[:5]
-        if self.get_front_middle_laser() < 0.5:
+        if self.get_front_middle_laser() <= 0.5:
             if self.get_front_middle_laser() <= 0.45:
                 if self.get_front_middle_laser() < self.last_laser_reading:
                     self.objects.append(self.get_current_angle())
                     self.last_laser_reading = self.front_middle_laser
                 if self.get_front_middle_laser() > self.last_laser_reading:
                     self.last_laser_reading = self.front_middle_laser
-            if self.get_front_middle_laser() > 0.45:
+            if self.get_front_middle_laser() >= 0.45:
                 self.last_laser_reading = self.front_middle_laser
 
     def spin(self):
