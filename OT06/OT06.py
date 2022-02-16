@@ -24,6 +24,7 @@ class Robot:
         self.object_start = 5
         self.object_start_and_end = []
         self.circle = self.axis_length * math.pi
+        self.last_laser_reading = 0.5
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set Robot reference."""
@@ -45,8 +46,8 @@ class Robot:
 
     def get_current_angle(self):
         """"jshdhbd."""
-        wheel_distance = self.right_encoder / 360 * self.wheel_circumference
-        current_angle = wheel_distance * 360 * self.circle
+        wheel_distance = (self.left_encoder * math.pi / self.wheel_circumference) - (self.right_encoder / 360 * self.wheel_circumference)
+        current_angle = wheel_distance * 360 * self.circle / 100
         if current_angle > 0:
             return current_angle
         else:
@@ -71,15 +72,15 @@ class Robot:
         self.front_middle_laser = self.robot.get_front_middle_laser()
         self.filter_list.append(copy.deepcopy(self.front_middle_laser))
         self.filter_list = self.filter_list[:5]
-        if self.get_front_middle_laser() < 0.45 and self.object_start == 5:
-            self.object_start_and_end.append(self.get_current_angle())
-            self.object_start = self.front_middle_laser
-        if self.get_front_middle_laser() > self.object_start:
-            self.object_start_and_end.append(self.get_current_angle())
-            self.object_start = 5
-            object_center = sum(self.object_start_and_end) / 2
-            self.objects.append(copy.deepcopy(object_center))
-            self.object_start_and_end = []
+        if self.get_front_middle_laser() < 0.5:
+            if self.get_front_middle_laser() <= 0.45:
+                if self.get_front_middle_laser() < self.last_laser_reading:
+                    self.objects.append(self.get_current_angle())
+                    self.last_laser_reading = self.front_middle_laser
+                if self.get_front_middle_laser() > self.last_laser_reading:
+                    self.last_laser_reading = self.front_middle_laser
+            if self.get_front_middle_laser() > 0.45:
+                self.last_laser_reading = self.front_middle_laser
 
     def spin(self):
         """The main loop."""
@@ -95,7 +96,6 @@ def main():
     """The  main entry point."""
     robot = Robot()
     robot.spin()
-
 
 
 def test():
