@@ -87,8 +87,9 @@ class Robot:
         self.right_encoder = self.robot.get_right_wheel_encoder()
         self.left_encoder = self.robot.get_left_wheel_encoder()
         self.front_middle_laser = self.robot.get_front_middle_laser()
-        self.filter_list.append(copy.deepcopy(self.front_middle_laser))
-        self.filter_list = self.filter_list[:5]
+        if self.front_middle_laser is not None:
+            self.filter_list.append(copy.deepcopy(self.front_middle_laser))
+            self.filter_list = self.filter_list[:5]
 
     def spin(self):
         """The main loop."""
