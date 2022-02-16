@@ -51,6 +51,7 @@ class Robot:
             self.object_detected = False
             self.objects.append(object_angle)
             self.object_start_and_end.clear()
+        return self.objects
         #     if self.get_front_middle_laser() < self.last_laser_reading:
         #         self.objects.append(self.get_current_angle())
         #         self.last_laser_reading = self.front_middle_laser
