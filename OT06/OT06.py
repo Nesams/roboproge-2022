@@ -66,9 +66,9 @@ class Robot:
         wheel_distance = (self.left_encoder * math.pi / self.wheel_circumference) - (self.right_encoder / 360 * self.wheel_circumference)
         current_angle = wheel_distance * 360 * self.circle / 100
         if current_angle > 0:
-            return current_angle
+            return current_angle % 360
         else:
-            return 360 + current_angle
+            return (360 + current_angle) % 360
 
     def get_front_middle_laser(self):
         """
@@ -78,7 +78,7 @@ class Robot:
           None if filter is empty, filtered value otherwise.
         """
         if not self.filter_list:
-            return []
+            return None
         else:
             return statistics.median(self.filter_list)
 
@@ -88,7 +88,7 @@ class Robot:
         self.left_encoder = self.robot.get_left_wheel_encoder()
         self.front_middle_laser = self.robot.get_front_middle_laser()
         if self.front_middle_laser is not None:
-            self.filter_list.append(copy.deepcopy(self.front_middle_laser))
+            self.filter_list.insert(0, copy.deepcopy(self.front_middle_laser))
             self.filter_list = self.filter_list[:5]
 
     def spin(self):
