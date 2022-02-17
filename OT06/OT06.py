@@ -55,7 +55,7 @@ class Robot:
 
     def get_current_angle(self):
         """"jshdhbd."""
-        wheel_distance = (self.right_encoder / 360 * self.wheel_circumference)
+        wheel_distance = ((self.right_encoder % 360) / 360 * self.wheel_circumference)
         current_angle = wheel_distance * 360 / self.circle
         if current_angle > 0:
             return current_angle % 360
