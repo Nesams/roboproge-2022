@@ -1,5 +1,4 @@
 """OT06 - Object Detection."""
-import copy
 import math
 import statistics
 import PiBot
@@ -52,7 +51,7 @@ class Robot:
                 self.object_detected = False
                 self.objects.append(object_angle)
                 self.object_start_and_end.clear()
-            return self.objects
+        return self.objects
 
     def get_current_angle(self):
         """"jshdhbd."""
