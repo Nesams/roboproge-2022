@@ -25,6 +25,7 @@ class Robot:
         self.circle = self.axis_length * math.pi
         self.last_laser_reading = 0.5
         self.object_detected = False
+        self.wheel_distance = 0
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set Robot reference."""
@@ -50,13 +51,16 @@ class Robot:
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
                 self.object_detected = False
                 self.objects.append(object_angle)
+                if self.wheel_distance > 360:
+                    self.objects[-1] = 180 - self.objects[-1]
+                    self.objects[-1] += 180
                 self.object_start_and_end.clear()
         return self.objects
 
     def get_current_angle(self):
         """"jshdhbd."""
-        wheel_distance = (self.right_encoder / 360 * self.wheel_circumference)
-        current_angle = wheel_distance * 360 / self.circle
+        self.wheel_distance = (self.right_encoder / 360 * self.wheel_circumference)
+        current_angle = self.wheel_distance * 360 / self.circle
         return current_angle % 360
 
     def get_front_middle_laser(self):
