@@ -10,8 +10,11 @@ class Robot:
         self.robot = PiBot.PiBot()
         self.shutdown = False
         self.line_directions = []
-        self.last_position = 0
-        self.speed = 11
+        self.last_positions = [0]
+        self.motors = []
+        self.TURN_SPEED = 8
+        self.DRIVE_SPEED = 8
+        self.SLEEP_TIME = 0.025
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set robot reference."""
@@ -25,25 +28,19 @@ class Robot:
 
     def plan(self):
         """Plan method."""
-        i = 0
-        self.robot.set_right_wheel_speed(12)
-        self.robot.set_left_wheel_speed(12)
-        while i < 2420:
-            i += 1
-            self.robot.sleep(0.05)
-            if self.line_directions[-1] > 400:
-                self.robot.set_left_wheel_speed(12)
-            else:
-                self.robot.set_left_wheel_speed(5)
-            if self.line_directions[0] > 400:
-                self.robot.set_right_wheel_speed(12)
-            else:
-                self.robot.set_right_wheel_speed(5)
-            if self.robot.get_second_line_sensor_from_left() > 400:
-                self.robot.set_right_wheel_speed(12)
-            else:
-                self.robot.set_right_wheel_speed(5)
-        self.robot.set_wheels_speed(0)
+        directions = self.get_line_direction()
+        self.motors.clear()
+        if directions == -1:  # Right
+            self.motors = [self.TURN_SPEED, -self.TURN_SPEED]
+        elif directions == 0:  # On line
+            self.motors = [self.DRIVE_SPEED, self.DRIVE_SPEED]
+        elif directions == 1:  # Left
+            self.motors = [-self.TURN_SPEED, self.TURN_SPEED]
+
+    def act(self):
+        """Act method."""
+        self.robot.set_left_wheel_speed(self.motors[0])
+        self.robot.set_right_wheel_speed(self.motors[1])
 
     def get_line_direction(self):
         """
@@ -60,52 +57,33 @@ class Robot:
                 line_exists.append(1)
             else:
                 line_exists.append(0)
+        print(self.line_directions)
         print(line_exists)
-        if len(line_exists) == 0:
-            return self.last_position
-        if line_exists[2] == 1 or line_exists[3] == 1:
-            self.last_position = 0
+        print("")
+        if line_exists.count(1) == 0:
+            return self.last_positions[-1] if self.last_positions[-1] != 0 else self.last_positions[-2]
+        if line_exists[1:5].count(1) == 3:
             return 0
-        if line_exists[0] == 1 or line_exists[1] == 1:
-            self.last_position = 1
+        if line_exists[:3].count(1) > line_exists[3:].count(1):
+            self.last_positions.append(1)
             return 1
-        if line_exists[4] == 1 or line_exists[5] == 1:
-            self.last_position = -1
+        if line_exists[:3].count(1) < line_exists[3:].count(1):
+            self.last_positions.append(-1)
             return -1
+        if line_exists[:3].count(1) == line_exists[3:].count(1):
+            self.last_positions.append(0)
+            return 0
         else:
-            print('else')
-            return self.last_position
-
-    def move_forward(self):
-        """Act method for moving forward."""
-        self.robot.set_wheels_speed(self.speed)
-        self.robot.sleep(0.025)
-        self.robot.set_wheels_speed(0)
-
-    def move_right(self):
-        """Act method for moving right."""
-        self.robot.set_left_wheel_speed(self.speed)
-        self.robot.sleep(0.05)
-        self.robot.set_left_wheel_speed(0)
-
-    def move_left(self):
-        """Act method for moving left."""
-        self.robot.set_right_wheel_speed(self.speed)
-        self.robot.sleep(0.05)
-        self.robot.set_right_wheel_speed(0)
+            return self.last_positions[-1]
 
     def spin(self):
         """The main spin loop."""
         while not self.shutdown:
             timestamp = self.robot.get_time()
             self.sense()
-            res = self.get_line_direction()
-            if res == 0:
-                self.move_forward()
-            if res == 1:
-                self.move_left()
-            else:
-                self.move_right()
+            self.plan()
+            self.act()
+            self.robot.sleep(self.SLEEP_TIME)
 
 
 def main():
