@@ -11,6 +11,7 @@ class Robot:
         self.robot = PiBot.PiBot()
         self.shutdown = False
         self.line_directions = []
+        self.front_middle_laser = None
         self.filter_list = []
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
@@ -30,8 +31,8 @@ class Robot:
             return statistics.median(self.filter_list)
 
     def sense(self):
-        self.line_directions = self.get_front_middle_laser()
-        self.filter_list.insert(0, self.line_directions)
+        self.front_middle_laser = self.get_front_middle_laser()
+        self.filter_list.insert(0, copy.deepcopy(self.front_middle_laser))
         self.filter_list = self.filter_list[:5]
 
     def spin(self):
