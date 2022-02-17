@@ -51,7 +51,7 @@ class Robot:
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
                 self.object_detected = False
                 self.objects.append(object_angle)
-                if 300 <= self.object_start_and_end[0] <= 360 and 0 <= self.object_start_and_end[-1]:
+                if 310 <= self.object_start_and_end[-1] <= 360 and 0 <= self.object_start_and_end[0]:
                     self.objects[-1] += 180
                 self.object_start_and_end.clear()
         return self.objects
