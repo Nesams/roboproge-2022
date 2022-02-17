@@ -1,4 +1,5 @@
 """OT05 - Noise."""
+import copy
 import statistics
 
 import PiBot
