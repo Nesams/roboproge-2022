@@ -10,6 +10,7 @@ class Robot:
         """Initialize object."""
         self.robot = PiBot.PiBot()
         self.shutdown = False
+        self.line_directions = []
         self.filter_list = []
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
@@ -27,6 +28,11 @@ class Robot:
             return None
         else:
             return statistics.median(self.filter_list)
+
+    def sense(self):
+        self.line_directions = self.get_front_middle_laser()
+        self.filter_list.insert(0, self.line_directions)
+        self.filter_list = self.filter_list[:5]
 
     def spin(self):
         """The spin loop."""
