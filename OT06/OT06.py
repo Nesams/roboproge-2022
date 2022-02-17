@@ -51,7 +51,7 @@ class Robot:
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
                 self.object_detected = False
                 self.objects.append(object_angle)
-                if self.wheel_distance > 360:
+                if 310 <= self.object_start_and_end[0] <= 360 and 0 <= self.object_start_and_end[-1]:
                     self.objects[-1] = 180 - self.objects[-1]
                     self.objects[-1] += 180
                 self.object_start_and_end.clear()
@@ -59,7 +59,7 @@ class Robot:
 
     def get_current_angle(self):
         """"jshdhbd."""
-        self.wheel_distance = (self.right_encoder / 360 * self.wheel_circumference)
+        self.wheel_distance = self.right_encoder / 360 * self.wheel_circumference
         current_angle = self.wheel_distance * 360 / self.circle
         return current_angle % 360
 
