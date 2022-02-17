@@ -12,8 +12,8 @@ class Robot:
         self.line_directions = []
         self.last_positions = [0]
         self.motors = []
-        self.TURN_SPEED = 8
-        self.DRIVE_SPEED = 8
+        self.TURN_SPEED = 10
+        self.DRIVE_SPEED = 10
         self.SLEEP_TIME = 0.025
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
