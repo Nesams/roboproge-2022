@@ -43,7 +43,7 @@ class Robot:
           the right-hand rule (e.g., turning left 90 degrees is 90, turning
           right 90 degrees is 270 degrees).
         """
-        if self.get_front_middle_laser() <= 0.45:
+        if self.get_front_middle_laser() <= 0.45 and self.get_front_middle_laser() != 0:
             self.object_detected = True
             self.object_start_and_end.append(self.get_current_angle())
         elif self.get_front_middle_laser() >= 0.5 and self.object_detected:
@@ -52,15 +52,6 @@ class Robot:
             self.objects.append(object_angle)
             self.object_start_and_end.clear()
         return self.objects
-        #     if self.get_front_middle_laser() < self.last_laser_reading:
-        #         self.objects.append(self.get_current_angle())
-        #         self.last_laser_reading = self.front_middle_laser
-        #     if self.get_front_middle_laser() > self.last_laser_reading:
-        #         self.last_laser_reading = self.front_middle_laser
-        #     if self.get_front_middle_laser() >= 0.45:
-        #         self.last_laser_reading = self.front_middle_laser
-        # return self.objects
-        #
 
     def get_current_angle(self):
         """"jshdhbd."""
