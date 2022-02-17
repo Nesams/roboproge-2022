@@ -61,7 +61,7 @@ class Robot:
         print(line_exists)
         print("")
         if line_exists.count(1) == 0:
-            if len(self.last_positions) != 0:
+            if len(self.last_positions) >= 2:
                 return self.last_positions[-1] if self.last_positions[-1] != 0 else self.last_positions[-2]
             else:
                 return -1
