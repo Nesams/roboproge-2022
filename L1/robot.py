@@ -76,8 +76,8 @@ class Robot:
         if line_exists[:3].count(1) == line_exists[3:].count(1):
             self.last_positions.append(0)
             return 0
-        else:
-            return self.last_positions[-1]
+        # else:
+        #     return self.last_positions[-1]
 
     def spin(self):
         """The main spin loop."""
