@@ -10,8 +10,8 @@ class Robot:
         self.robot = PiBot.PiBot()
         self.state = "calibrate"
         self.time = 0
-        self.right_speed = 7
-        self.left_speed = 7
+        self.right_speed = 8
+        self.left_speed = 8
 
         self.last_right_encoder = 0
         self.last_left_encoder = 0
@@ -22,8 +22,8 @@ class Robot:
         self.right_wheel_coefficient = 1.0
         self.left_wheel_coefficient = 1.0
 
-        self.left_wheel_speed = 8
-        self.right_wheel_speed = 8
+        self.left_wheel_speed = 10
+        self.right_wheel_speed = 10
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set the robot reference."""
