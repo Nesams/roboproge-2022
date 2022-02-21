@@ -10,6 +10,8 @@ class Robot:
         self.robot = PiBot.PiBot()
         self.state = "calibrate"
         self.time = 0
+        self.right_speed = 7
+        self.left_speed = 7
 
         self.last_right_encoder = 0
         self.last_left_encoder = 0
@@ -50,28 +52,33 @@ class Robot:
         self.right_wheel_encoder = self.robot.get_right_wheel_encoder()
         self.left_wheel_encoder = self.robot.get_left_wheel_encoder()
         self.time = self.robot.get_time()
-        while self.time < 4:
-            if self.state == "calibrate" and self.right_wheel_encoder > self.left_wheel_encoder:
-                self.right_wheel_coefficient = 1.0
-                self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 10) / 10
-                self.state = "ready"
-            elif self.state == "calibrate" and self.right_wheel_encoder < self.left_wheel_encoder:
-                self.left_wheel_coefficient = 1.0
-                self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 10) / 10
-                self.state = "ready"
+        if self.state == "calibrate" and self.right_wheel_encoder > self.left_wheel_encoder != 0:
+            self.right_wheel_coefficient = 1.0
+            self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 10) / 10
+        elif self.state == "calibrate" and self.left_wheel_encoder > self.right_wheel_encoder != 0:
+            self.left_wheel_coefficient = 1.0
+            self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 10) / 10
+        if self.left_wheel_encoder == 0:
+            self.left_speed += 1
+        if self.right_wheel_encoder == 0:
+            self.right_speed += 1
 
     def plan(self):
         """The plan method in the SPA architecture."""
-        if self.state == "ready":
-            self.right_wheel_speed = 8 * self.right_wheel_coefficient
-            self.left_wheel_speed = 8 * self.left_wheel_coefficient
-            self.state = "drive"
+        if self.time > 4:
+            self.state = "ready"
+            self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
+            self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
+        elif self.state == "calibrate":
+            self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
+            self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
 
     def act(self):
         """The act method in the SPA architecture."""
-        if self.state == "drive":
+        if self.state == "drive" or self.state == "calibrate":
             self.robot.set_right_wheel_speed(self.right_wheel_speed)
             self.robot.set_left_wheel_speed(self.left_wheel_speed)
+
 
 def main():
     """The main entry point."""
@@ -90,6 +97,8 @@ def main():
     left_delta = robot.robot.get_left_wheel_encoder() - start_left
     right_delta = robot.robot.get_right_wheel_encoder() - start_right
     print(f"left {left_delta} right {right_delta}")
+    print(robot.left_wheel_coefficient, robot.right_wheel_coefficient)
+    print(robot.right_speed, robot.left_speed)
 
 
 if __name__ == "__main__":
