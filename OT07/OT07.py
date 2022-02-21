@@ -65,7 +65,7 @@ class Robot:
 
     def plan(self):
         """The plan method in the SPA architecture."""
-        if self.time > 4 and self.state == "calibrate":
+        if self.time > 3.5 and self.state == "calibrate":
             self.state = "ready"
             self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
             self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
