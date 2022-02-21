@@ -54,10 +54,10 @@ class Robot:
         self.time = self.robot.get_time()
         if self.state == "calibrate" and self.right_wheel_encoder > self.left_wheel_encoder != 0:
             self.right_wheel_coefficient = 1.0
-            self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 10) / 10
+            self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 2) / 10
         elif self.state == "calibrate" and self.left_wheel_encoder > self.right_wheel_encoder != 0:
             self.left_wheel_coefficient = 1.0
-            self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 10) / 10
+            self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 2) / 10
         if self.left_wheel_encoder == 0:
             self.left_speed += 1
         if self.right_wheel_encoder == 0:
