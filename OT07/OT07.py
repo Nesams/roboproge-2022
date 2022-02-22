@@ -76,6 +76,7 @@ class Robot:
         if self.state == "drive" or self.state == "calibrate":
             self.robot.set_right_wheel_speed(self.right_wheel_speed)
             self.robot.set_left_wheel_speed(self.left_wheel_speed)
+            self.sense()
 
 
 def main():
