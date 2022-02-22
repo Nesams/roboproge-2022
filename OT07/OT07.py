@@ -52,11 +52,9 @@ class Robot:
         self.right_wheel_encoder = self.robot.get_right_wheel_encoder()
         self.left_wheel_encoder = self.robot.get_left_wheel_encoder()
         self.time = self.robot.get_time()
-        if self.state == "calibrate" and self.right_wheel_encoder > self.left_wheel_encoder != 0:
-            self.right_wheel_coefficient = 1.0
+        if self.right_wheel_encoder > self.left_wheel_encoder != 0:
             self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 2) / 10
-        elif self.state == "calibrate" and self.left_wheel_encoder > self.right_wheel_encoder != 0:
-            self.left_wheel_coefficient = 1.0
+        elif self.left_wheel_encoder > self.right_wheel_encoder != 0:
             self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 2) / 10
         if self.left_wheel_encoder == 0:
             self.left_speed += 1
@@ -65,7 +63,7 @@ class Robot:
 
     def plan(self):
         """The plan method in the SPA architecture."""
-        if self.time > 3.5 and self.state == "calibrate":
+        if self.time > 4 and self.state == "calibrate":
             self.state = "ready"
             self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
             self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
