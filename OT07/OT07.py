@@ -50,9 +50,9 @@ class Robot:
     def calibrate(self):
         if self.state == "calibrate":
             if self.right_wheel_encoder > self.left_wheel_encoder != 0:
-                self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 4) / 10
+                self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 2) / 10
             elif self.left_wheel_encoder > self.right_wheel_encoder != 0:
-                self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 4) / 10
+                self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 2) / 10
             if self.left_wheel_encoder == 0:
                 self.left_speed += 1
             if self.right_wheel_encoder == 0:
@@ -77,7 +77,6 @@ class Robot:
             self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
             self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
             self.state = "ready"
-
         # elif self.state == "calibrate":
         #     self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
         #     self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
