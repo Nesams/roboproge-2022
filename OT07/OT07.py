@@ -47,36 +47,49 @@ class Robot:
         """
         return self.state
 
+    def calibrate(self):
+        if self.state == "calibrate":
+            if self.right_wheel_encoder > self.left_wheel_encoder != 0:
+                self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 4) / 10
+            elif self.left_wheel_encoder > self.right_wheel_encoder != 0:
+                self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 4) / 10
+            if self.left_wheel_encoder == 0:
+                self.left_speed += 1
+            if self.right_wheel_encoder == 0:
+                self.right_speed += 1
+        self.state = "ready"
+
     def sense(self):
         """The sense method in the SPA architecture."""
         self.right_wheel_encoder = self.robot.get_right_wheel_encoder()
         self.left_wheel_encoder = self.robot.get_left_wheel_encoder()
         self.time = self.robot.get_time()
-        if self.right_wheel_encoder > self.left_wheel_encoder != 0:
-            self.left_wheel_coefficient = 1.0 + ((self.right_wheel_encoder - self.left_wheel_encoder) // 2) / 10
-        elif self.left_wheel_encoder > self.right_wheel_encoder != 0:
-            self.right_wheel_coefficient = 1.0 + ((self.left_wheel_encoder - self.right_wheel_encoder) // 2) / 10
-        if self.left_wheel_encoder == 0:
-            self.left_speed += 1
-        if self.right_wheel_encoder == 0:
-            self.right_speed += 1
 
     def plan(self):
         """The plan method in the SPA architecture."""
-        if self.time > 4 and self.state == "calibrate":
+        if self.state == "drive" and abs(self.right_wheel_encoder - self.left_wheel_encoder) > 4 and self.calibrate_time + 4 < self.time:
+            self.calibrate_time = self.time
+            print("recal")
+            self.state = "calibrate"
+            self.calibrate()
             self.state = "ready"
+        elif self.time > 4 and self.state == "drive":
             self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
             self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
-        elif self.state == "calibrate":
-            self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
-            self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
+            self.state = "ready"
+
+        # elif self.state == "calibrate":
+        #     self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
+        #     self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
 
     def act(self):
         """The act method in the SPA architecture."""
-        if self.state == "drive" or self.state == "calibrate":
+        if self.state == "ready":
             self.robot.set_right_wheel_speed(self.right_wheel_speed)
             self.robot.set_left_wheel_speed(self.left_wheel_speed)
-            self.sense()
+            self.state = "drive"
+        elif self.state == "calibrate":
+            self.calibrate()
 
 
 def main():
