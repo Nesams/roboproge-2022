@@ -9,12 +9,6 @@ class Robot:
         """Class constructor."""
         self.robot = PiBot.PiBot()
 
-        self.prev_right_speed = 0
-        self.prev_left_speed = 0
-
-        self.left_wheel_speed = 0
-        self.right_wheel_speed = 0
-
         self.right_wheel_setpoint = 0
         self.left_wheel_setpoint = 0
 
@@ -158,6 +152,7 @@ class Robot:
             self.sense()
             self.act()
             self.robot.sleep(0.20)
+            print(self.right_PID, self.left_PID)
 
 
 def main():
