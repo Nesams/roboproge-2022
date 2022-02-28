@@ -19,9 +19,6 @@ class Robot:
         self.left_wheel_encoder = 0
         self.encoder_difference = 0
 
-        self.right_wheel_coefficient = 1.0
-        self.left_wheel_coefficient = 1.0
-
         self.left_wheel_speed = 10
         self.right_wheel_speed = 10
 
@@ -67,26 +64,30 @@ class Robot:
 
     def plan(self):
         """The plan method in the SPA architecture."""
-        if self.state == "drive" and abs(self.right_wheel_encoder - self.left_wheel_encoder) > 4 and self.calibrate_time + 4 < self.time:
-            self.calibrate_time = self.time
-            print("recal")
-            self.state = "calibrate"
+        if self.state == "calibrate":
+            print("calibrate", self.time)
             self.calibrate()
-            self.state = "ready"
-        elif self.time > 4 and self.state == "drive":
-            self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
-            self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
-            self.state = "ready"
-        # elif self.state == "calibrate":
-        #     self.right_wheel_speed = self.right_speed * self.right_wheel_coefficient
-        #     self.left_wheel_speed = self.left_speed * self.left_wheel_coefficient
+            self.right_wheel_speed = self.right_speed
+            self.left_wheel_speed = self.left_speed
+        if self.state == "drive":
+            """if abs(self.right_wheel_encoder - self.left_wheel_encoder) > 50 and self.calibrate_time < self.time:
+                if not self.calibrating:
+                    self.calibrate_time = self.time + 4
+                    self.calibrating = True
+                if self.calibrating and self.calibrate_time < self.time:
+                    self.calibrating = False
+                print("recal", self.time)
+                self.state = "calibrate"
+                self.calibrate()"""
+            self.right_wheel_speed = self.right_speed
+            self.left_wheel_speed = self.left_speed
 
     def act(self):
         """The act method in the SPA architecture."""
-        if self.state == "ready":
+        if self.state == "drive":
+            self.calibrate()
             self.robot.set_right_wheel_speed(self.right_wheel_speed)
             self.robot.set_left_wheel_speed(self.left_wheel_speed)
-            self.state = "drive"
         elif self.state == "calibrate":
             self.calibrate()
 
