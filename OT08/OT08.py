@@ -133,8 +133,8 @@ class Robot:
 
     def sense(self):
         """SPA architecture sense block."""
-        self.prev_right_speed = self.right_wheel_speed
-        self.prev_left_speed = self.left_wheel_speed
+        self.prev_right_encoder = self.right_wheel_encoder
+        self.prev_left_encoder = self.left_wheel_encoder
 
         self.right_wheel_encoder = self.robot.get_right_wheel_encoder()
         self.left_wheel_encoder = self.robot.get_left_wheel_encoder()
