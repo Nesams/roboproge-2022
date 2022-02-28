@@ -79,7 +79,7 @@ class Robot:
         Returns:
           The controller output value.
         """
-        return self.right_PID
+        return self.left_PID
 
     def get_right_wheel_pid_output(self):
         """
@@ -88,7 +88,7 @@ class Robot:
         Returns:
           The controller output value.
         """
-        return self.left_PID
+        return self.right_PID
 
     def get_right_pid(self, time_difference):
         """Calculate the sum of right PID."""
@@ -152,7 +152,7 @@ class Robot:
             self.sense()
             self.act()
             self.robot.sleep(0.20)
-            print(self.right_PID, self.left_PID)
+            print(self.get_right_wheel_pid_output(), self.get_left_wheel_pid_output())
 
 
 def main():
