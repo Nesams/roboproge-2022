@@ -106,7 +106,7 @@ class Robot:
         self.right_error = self.right_wheel_setpoint - right_speed
         p = self.p * self.right_error
 
-        self.right_error_sum = self.right_error
+        self.right_error_sum += self.right_error
         i = self.i * self.right_error_sum
 
         right_error_difference = self.right_error - self.prev_right_error
