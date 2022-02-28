@@ -115,9 +115,9 @@ class Robot:
 
         self.prev_left_error = self.left_error
         self.left_error = self.left_wheel_setpoint - left_speed
-        p = self.p * self.left_error * time_difference
+        p = self.p * self.left_error
 
-        self.left_error_sum += self.left_error
+        self.left_error_sum += self.left_error * time_difference
         i = self.i * self.left_error_sum
 
         left_error_difference = self.left_error - self.prev_left_error
