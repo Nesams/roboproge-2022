@@ -50,13 +50,13 @@ class Robot:
           right 90 degrees is 270 degrees).
         """
         if len(self.filter_list) == 5:
-            if self.get_front_middle_laser() <= 0.45:
+            if self.get_front_middle_laser() <= 0.55:
                 self.object_detected = True
                 self.object_distance = self.get_front_middle_laser()
                 if self.object_distance < self.min_object_distance:
                     self.min_object_distance = self.object_distance
                 self.object_start_and_end.append(self.get_current_angle())
-            elif self.get_front_middle_laser() >= 0.5 and self.object_detected:
+            elif self.get_front_middle_laser() >= 0.6 and self.object_detected:
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
 
                 self.object_detected = False
