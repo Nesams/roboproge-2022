@@ -125,6 +125,8 @@ class Robot:
 
         self.left_PID = p + i + d
 
+        self.prev_left_error = self.left_error
+
     def sense(self):
         """SPA architecture sense block."""
         self.prev_right_encoder = self.right_wheel_encoder
