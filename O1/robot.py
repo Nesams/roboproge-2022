@@ -22,6 +22,7 @@ class Robot:
         self.wheel_circumference = self.robot.WHEEL_DIAMETER * math.pi
         self.object_start = 5
         self.object_start_and_end = []
+        self.min_object_distance = 100
         self.circle = self.axis_length * math.pi
         self.last_laser_reading = 0.5
         self.object_detected = False
@@ -52,9 +53,12 @@ class Robot:
             if self.get_front_middle_laser() <= 0.45:
                 self.object_detected = True
                 self.object_distance = self.get_front_middle_laser()
+                if self.object_distance < self.min_object_distance:
+                    self.min_object_distance = self.object_distance
                 self.object_start_and_end.append(self.get_current_angle())
             elif self.get_front_middle_laser() >= 0.5 and self.object_detected:
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
+
                 self.object_detected = False
                 self.objects.append(object_angle)
                 if 310 <= self.object_start_and_end[-1] <= 360 and 0 <= self.object_start_and_end[0]:
@@ -100,13 +104,13 @@ class Robot:
             if abs(self.get_current_angle() - self.objects[0]) < 1 or self.drive_straight:
                 self.drive_straight = True
                 if self.started_driving == 0:
-                    self.started_driving = self.time
-                if self.started_driving + 4 < self.time:
+                    self.started_driving = self.time + self.min_object_distance * 10
+                if self.started_driving < self.time:
                     self.robot.set_wheels_speed(0)
                     self.shutdown = True
                 else:
-                    self.left_wheel_speed = 30
-                    self.right_wheel_speed = 30
+                    self.left_wheel_speed = 10
+                    self.right_wheel_speed = 10
             elif not self.drive_straight:
                 self.left_wheel_speed = -8
                 self.right_wheel_speed = 8
