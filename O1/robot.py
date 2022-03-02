@@ -82,10 +82,15 @@ class Robot:
             self.filter_list.insert(0, self.front_middle_laser)
             self.filter_list = self.filter_list[:5]
 
+    def act(self):
+        self.robot.set_left_wheel_speed(-8)
+        self.robot.set_right_wheel_speed(8)
+
     def spin(self):
         """The main loop."""
         while not self.shutdown:
             self.sense()
+            self.act()
             self.get_objects()
             print(f'Value is {self.get_front_middle_laser()}')
             self.robot.sleep(0.05)
