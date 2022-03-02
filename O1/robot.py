@@ -94,7 +94,8 @@ class Robot:
             self.left_wheel_speed = -8
             self.right_wheel_speed = 8
         else:
-            if abs(self.get_current_angle() - self.objects[0]) < 1:
+            if abs(self.get_current_angle() - self.objects[0]) < 3:
+                print(self.get_current_angle(), self.objects)
                 self.left_wheel_speed = -8
                 self.right_wheel_speed = 8
             else:
@@ -112,7 +113,6 @@ class Robot:
             self.sense()
             self.plan()
             self.act()
-            print(f'Value is {self.get_front_middle_laser()}')
             self.robot.sleep(0.05)
 
 def main():
