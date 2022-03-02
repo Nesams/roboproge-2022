@@ -58,12 +58,11 @@ class Robot:
                 self.object_start_and_end.append(self.get_current_angle())
             elif self.get_front_middle_laser() >= 0.6 and self.object_detected:
                 print(len(self.object_start_and_end), '===================')
+                if len(self.object_start_and_end) > 15:
+                    pass
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
-
                 self.object_detected = False
                 self.objects.append(object_angle)
-                #if 310 <= self.object_start_and_end[-1] <= 360 and 0 <= self.object_start_and_end[0]:
-                    #self.objects[-1] -= 180
                 self.object_start_and_end.clear()
         return self.objects
 
@@ -93,7 +92,7 @@ class Robot:
         self.time = self.robot.get_time()
         if self.front_middle_laser is not None:
             self.filter_list.insert(0, self.front_middle_laser)
-            self.filter_list = self.filter_list[:5]
+            self.filter_list = self.filter_list[:10]
 
     def plan(self):
         if not self.objects:
