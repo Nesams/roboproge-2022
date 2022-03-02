@@ -103,8 +103,13 @@ class Robot:
         self.right_error_sum += self.right_error * time_difference
         i = self.i * self.right_error_sum
 
-        right_error_difference = (self.right_error - self.prev_right_error) / time_difference
-        d = self.d * right_error_difference
+        if time_difference == 0:
+            d = 0
+        else:
+            right_error_difference = (self.right_error - self.prev_right_error) / time_difference
+            d = self.d * right_error_difference
+
+        self.prev_right_error = self.right_error
 
         self.right_PID = p + i + d
 
@@ -120,8 +125,11 @@ class Robot:
         self.left_error_sum += self.left_error * time_difference
         i = self.i * self.left_error_sum
 
-        left_error_difference = (self.left_error - self.prev_left_error) / time_difference
-        d = self.d * left_error_difference
+        if time_difference == 0:
+            d = 0
+        else:
+            left_error_difference = (self.left_error - self.prev_left_error) / time_difference
+            d = self.d * left_error_difference
 
         self.left_PID = p + i + d
 
@@ -139,12 +147,8 @@ class Robot:
         self.time = self.robot.get_time()
 
         time_difference = self.time - self.prev_time
-        if time_difference != 0:
-            self.get_right_pid(time_difference)
-            self.get_left_pid(time_difference)
-        else:
-            self.get_right_pid(1)
-            self.get_left_pid(1)
+        self.get_right_pid(time_difference)
+        self.get_left_pid(time_difference)
 
     def act(self):
         """SPA architecture act block."""
