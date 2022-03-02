@@ -93,9 +93,10 @@ class Robot:
     def get_right_pid(self, time_difference):
         """Calculate the sum of right PID."""
         right_encoder_difference = self.right_wheel_encoder - self.prev_right_encoder
-        right_speed = right_encoder_difference / time_difference
-
-        self.prev_right_error = self.right_error
+        if time_difference == 0:
+            right_speed = 0
+        else:
+            right_speed = right_encoder_difference / time_difference
 
         self.right_error = self.right_wheel_setpoint - right_speed
         p = self.p * self.right_error
@@ -116,7 +117,10 @@ class Robot:
     def get_left_pid(self, time_difference):
         """Calculate the sum of left PID."""
         left_encoder_difference = self.left_wheel_encoder - self.prev_left_encoder
-        left_speed = left_encoder_difference / time_difference
+        if time_difference == 0:
+            left_speed = 0
+        else:
+            left_speed = left_encoder_difference / time_difference
 
         self.prev_left_error = self.left_error
         self.left_error = self.left_wheel_setpoint - left_speed
