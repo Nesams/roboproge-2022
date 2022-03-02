@@ -83,8 +83,9 @@ class Robot:
             self.filter_list = self.filter_list[:5]
 
     def act(self):
-        self.robot.set_left_wheel_speed(-8)
-        self.robot.set_right_wheel_speed(8)
+        if len(self.objects) < 1:
+            self.robot.set_left_wheel_speed(-8)
+            self.robot.set_right_wheel_speed(8)
 
     def spin(self):
         """The main loop."""
