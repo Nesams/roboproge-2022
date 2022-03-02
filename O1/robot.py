@@ -102,14 +102,5 @@ def main():
     robot.spin()
 
 
-def test():
-    robot = Robot()
-    robot.sense()
-    robot.get_objects()
-    print(f"laser = {robot.robot.get_front_middle_laser()}")
-    print(robot.objects)
-    robot.robot.sleep(0.05)
-
-
 if __name__ == "__main__":
-    test()
+    main()
