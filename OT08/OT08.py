@@ -142,6 +142,9 @@ class Robot:
         if time_difference != 0:
             self.get_right_pid(time_difference)
             self.get_left_pid(time_difference)
+        else:
+            self.get_right_pid(1)
+            self.get_left_pid(1)
 
     def act(self):
         """SPA architecture act block."""
