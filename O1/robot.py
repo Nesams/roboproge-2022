@@ -57,6 +57,7 @@ class Robot:
                     self.min_object_distance = self.object_distance
                 self.object_start_and_end.append(self.get_current_angle())
             elif self.get_front_middle_laser() >= 0.6 and self.object_detected:
+                print(len(self.object_start_and_end), '===================')
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
 
                 self.object_detected = False
