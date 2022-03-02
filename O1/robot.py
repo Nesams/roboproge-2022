@@ -104,7 +104,7 @@ class Robot:
             if abs(self.get_current_angle() - self.objects[0]) < 1 or self.drive_straight:
                 self.drive_straight = True
                 if self.started_driving == 0:
-                    self.started_driving = self.time + self.min_object_distance * 10
+                    self.started_driving = self.time + self.min_object_distance * 7.5
                 if self.started_driving < self.time:
                     self.robot.set_wheels_speed(0)
                     self.shutdown = True
@@ -112,8 +112,8 @@ class Robot:
                     self.left_wheel_speed = 10
                     self.right_wheel_speed = 10
             elif not self.drive_straight:
-                self.left_wheel_speed = -8
-                self.right_wheel_speed = 8
+                self.left_wheel_speed = 8
+                self.right_wheel_speed = -8
 
     def act(self):
         self.robot.set_left_wheel_speed(self.left_wheel_speed)
