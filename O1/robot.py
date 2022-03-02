@@ -8,6 +8,7 @@ class Robot:
 
     def __init__(self):
         """Class constructor."""
+        self.started_driving = 0
         self.robot = PiBot.PiBot()
         self.shutdown = False
         self.objects = []
@@ -97,11 +98,15 @@ class Robot:
         else:
             print(self.get_current_angle(), self.objects, abs(self.get_current_angle() - self.objects[0]) < 1)
             if abs(self.get_current_angle() - self.objects[0]) < 1 or self.drive_straight:
-                print("jou")
-                self.robot.set_wheels_speed(0)
-                self.left_wheel_speed = 8
-                self.right_wheel_speed = 8
                 self.drive_straight = True
+                if self.started_driving == 0:
+                    self.started_driving = self.time
+                if self.started_driving + 4 < self.time:
+                    self.robot.set_wheels_speed(0)
+                    self.shutdown = True
+                else:
+                    self.left_wheel_speed = 30
+                    self.right_wheel_speed = 30
             elif not self.drive_straight:
                 self.left_wheel_speed = -8
                 self.right_wheel_speed = 8
