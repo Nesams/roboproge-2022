@@ -103,7 +103,7 @@ class Robot:
         self.right_error_sum += self.right_error * time_difference
         i = self.i * self.right_error_sum
 
-        right_error_difference = self.right_error - self.prev_right_error
+        right_error_difference = (self.right_error - self.prev_right_error) / time_difference
         d = self.d * right_error_difference
 
         self.right_PID = p + i + d
@@ -120,7 +120,7 @@ class Robot:
         self.left_error_sum += self.left_error * time_difference
         i = self.i * self.left_error_sum
 
-        left_error_difference = self.left_error - self.prev_left_error
+        left_error_difference = (self.left_error - self.prev_left_error) / time_difference
         d = self.d * left_error_difference
 
         self.left_PID = p + i + d
@@ -152,7 +152,7 @@ class Robot:
             self.sense()
             self.act()
             self.robot.sleep(0.20)
-            print(self.get_right_wheel_pid_output(), self.get_left_wheel_pid_output())
+            print(self.right_PID, self.left_PID)
 
 
 def main():
