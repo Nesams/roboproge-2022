@@ -25,6 +25,10 @@ class Robot:
         self.last_laser_reading = 0.5
         self.object_detected = False
         self.wheel_distance = 0
+        self.left_wheel_speed = 0
+        self.right_wheel_speed = 0
+        self.object_distance = 0
+        self.time = 0
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set Robot reference."""
@@ -45,6 +49,7 @@ class Robot:
         if len(self.filter_list) == 5:
             if self.get_front_middle_laser() <= 0.45:
                 self.object_detected = True
+                self.object_distance = self.get_front_middle_laser()
                 self.object_start_and_end.append(self.get_current_angle())
             elif self.get_front_middle_laser() >= 0.5 and self.object_detected:
                 object_angle = (self.object_start_and_end[0] + self.object_start_and_end[-1]) / 2
@@ -78,14 +83,27 @@ class Robot:
         self.right_encoder = self.robot.get_right_wheel_encoder()
         self.left_encoder = self.robot.get_left_wheel_encoder()
         self.front_middle_laser = self.robot.get_front_middle_laser()
+        self.time = self.robot.get_time()
         if self.front_middle_laser is not None:
             self.filter_list.insert(0, self.front_middle_laser)
             self.filter_list = self.filter_list[:5]
 
+    def plan(self):
+        if not self.objects:
+            self.left_wheel_speed = -8
+            self.right_wheel_speed = 8
+        else:
+            if abs(self.get_current_angle() - self.objects[0]) < 0.5:
+                self.left_wheel_speed = -8
+                self.right_wheel_speed = 8
+            else:
+                self.left_wheel_speed = 8
+                self.right_wheel_speed = 8
+
     def act(self):
         if len(self.objects) < 1:
-            self.robot.set_left_wheel_speed(-8)
-            self.robot.set_right_wheel_speed(8)
+            self.robot.set_left_wheel_speed(self.left_wheel_speed)
+            self.robot.set_right_wheel_speed(self.right_wheel_speed)
 
     def spin(self):
         """The main loop."""
