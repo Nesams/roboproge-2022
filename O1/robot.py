@@ -95,9 +95,6 @@ class Robot:
             self.get_objects()
             print(f'Value is {self.get_front_middle_laser()}')
             self.robot.sleep(0.05)
-            if self.robot.get_time() > 20:
-                self.shutdown = True
-
 
 def main():
     """The  main entry point."""
