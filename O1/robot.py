@@ -104,7 +104,7 @@ class Robot:
             if abs(self.get_current_angle() - self.objects[0]) < 1 or self.drive_straight:
                 self.drive_straight = True
                 if self.started_driving == 0:
-                    self.started_driving = self.time + self.min_object_distance * 6
+                    self.started_driving = self.time + self.min_object_distance * 9
                 if self.started_driving < self.time:
                     self.left_wheel_speed = 0
                     self.right_wheel_speed = 0
