@@ -89,17 +89,17 @@ class Robot:
             self.filter_list = self.filter_list[:5]
 
     def plan(self):
-        self.get_objects()
         if not self.objects:
+            self.get_objects()
             self.left_wheel_speed = -8
             self.right_wheel_speed = 8
         else:
-            print(self.get_current_angle(), self.objects)
-            if abs(self.get_current_angle() - self.objects[0]) > 3:
-                self.left_wheel_speed = -8
+            print(self.get_current_angle(), self.objects, abs(self.get_current_angle() - self.objects[0]) < 1)
+            if abs(self.get_current_angle() - self.objects[0]) < 1:
+                self.left_wheel_speed = 8
                 self.right_wheel_speed = 8
             else:
-                self.left_wheel_speed = 8
+                self.left_wheel_speed = -8
                 self.right_wheel_speed = 8
 
     def act(self):
