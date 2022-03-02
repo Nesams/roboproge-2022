@@ -94,7 +94,7 @@ class Robot:
             self.left_wheel_speed = -8
             self.right_wheel_speed = 8
         else:
-            if abs(self.get_current_angle() - self.objects[0]) < 0.5:
+            if abs(self.get_current_angle() - self.objects[0]) < 1:
                 self.left_wheel_speed = -8
                 self.right_wheel_speed = 8
             else:
