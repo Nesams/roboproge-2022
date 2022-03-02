@@ -89,6 +89,7 @@ class Robot:
             self.filter_list = self.filter_list[:5]
 
     def plan(self):
+        self.get_objects()
         if not self.objects:
             self.left_wheel_speed = -8
             self.right_wheel_speed = 8
@@ -109,8 +110,8 @@ class Robot:
         """The main loop."""
         while not self.shutdown:
             self.sense()
+            self.plan()
             self.act()
-            self.get_objects()
             print(f'Value is {self.get_front_middle_laser()}')
             self.robot.sleep(0.05)
 
