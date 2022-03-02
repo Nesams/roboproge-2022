@@ -29,6 +29,7 @@ class Robot:
         self.right_wheel_speed = 0
         self.object_distance = 0
         self.time = 0
+        self.drive_straight = False
 
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set Robot reference."""
@@ -95,10 +96,11 @@ class Robot:
             self.right_wheel_speed = 8
         else:
             print(self.get_current_angle(), self.objects, abs(self.get_current_angle() - self.objects[0]) < 1)
-            if abs(self.get_current_angle() - self.objects[0]) < 1:
+            if abs(self.get_current_angle() - self.objects[0]) < 1 or self.drive_straight:
                 self.left_wheel_speed = 8
                 self.right_wheel_speed = 8
-            else:
+                self.drive_straight = True
+            elif not self.drive_straight:
                 self.left_wheel_speed = -8
                 self.right_wheel_speed = 8
 
