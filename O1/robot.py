@@ -106,7 +106,8 @@ class Robot:
                 if self.started_driving == 0:
                     self.started_driving = self.time + self.min_object_distance * 4.5
                 if self.started_driving < self.time:
-                    self.robot.set_wheels_speed(0)
+                    self.left_wheel_speed = 0
+                    self.right_wheel_speed = 0
                     self.shutdown = True
                 else:
                     self.left_wheel_speed = 10
