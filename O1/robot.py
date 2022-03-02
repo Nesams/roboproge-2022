@@ -97,6 +97,8 @@ class Robot:
         else:
             print(self.get_current_angle(), self.objects, abs(self.get_current_angle() - self.objects[0]) < 1)
             if abs(self.get_current_angle() - self.objects[0]) < 1 or self.drive_straight:
+                print("jou")
+                self.robot.set_wheels_speed(0)
                 self.left_wheel_speed = 8
                 self.right_wheel_speed = 8
                 self.drive_straight = True
