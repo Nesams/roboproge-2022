@@ -92,7 +92,7 @@ class Robot:
         self.time = self.robot.get_time()
         if self.front_middle_laser is not None:
             self.filter_list.insert(0, self.front_middle_laser)
-            self.filter_list = self.filter_list[:10]
+            self.filter_list = self.filter_list[:5]
 
     def plan(self):
         if not self.objects:
