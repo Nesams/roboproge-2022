@@ -3,6 +3,7 @@ import math
 import statistics
 import PiBot
 
+
 class Robot:
     """Robot class."""
 
@@ -93,6 +94,7 @@ class Robot:
             self.filter_list = self.filter_list[:5]
 
     def plan(self):
+        """Plan."""
         if not self.objects:
             self.get_objects()
             self.left_wheel_speed = -6
@@ -115,6 +117,7 @@ class Robot:
                 self.right_wheel_speed = 6
 
     def act(self):
+        """Act."""
         self.robot.set_left_wheel_speed(self.left_wheel_speed)
         self.robot.set_right_wheel_speed(self.right_wheel_speed)
 
@@ -125,6 +128,7 @@ class Robot:
             self.plan()
             self.act()
             self.robot.sleep(0.05)
+
 
 def main():
     """The  main entry point."""
