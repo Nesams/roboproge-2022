@@ -95,8 +95,8 @@ class Robot:
     def plan(self):
         if not self.objects:
             self.get_objects()
-            self.left_wheel_speed = -8
-            self.right_wheel_speed = 8
+            self.left_wheel_speed = -6
+            self.right_wheel_speed = 6
         else:
             print(self.get_current_angle(), self.objects, abs(self.get_current_angle() - self.objects[0]) < 1)
             if abs(self.get_current_angle() - self.objects[0]) < 1 or self.drive_straight:
@@ -108,11 +108,11 @@ class Robot:
                     self.right_wheel_speed = 0
                     self.shutdown = True
                 else:
-                    self.left_wheel_speed = 10
-                    self.right_wheel_speed = 10
+                    self.left_wheel_speed = 7
+                    self.right_wheel_speed = 7
             elif not self.drive_straight:
-                self.left_wheel_speed = -8
-                self.right_wheel_speed = 8
+                self.left_wheel_speed = -6
+                self.right_wheel_speed = 6
 
     def act(self):
         self.robot.set_left_wheel_speed(self.left_wheel_speed)
