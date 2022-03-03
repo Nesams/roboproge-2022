@@ -122,7 +122,6 @@ class Robot:
         else:
             left_speed = left_encoder_difference / time_difference
 
-        self.prev_left_error = self.left_error
         self.left_error = self.left_wheel_setpoint - left_speed
         p = self.p * self.left_error
 
