@@ -43,7 +43,7 @@ class Robot:
         self.cameradetection()
 
     def cameradetection(self):
-        """Calculating the closest object angle"""
+        """Calculating the closest object angle."""
         if len(self.detected_objects) == 0:
             return None
         else:
