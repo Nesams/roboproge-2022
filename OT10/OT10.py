@@ -43,6 +43,7 @@ class Robot:
         self.cameradetection()
 
     def cameradetection(self):
+        """Calculating the closest object angle"""
         if len(self.detected_objects) == 0:
             return None
         else:
@@ -75,20 +76,20 @@ def main():
     robot = Robot()
     robot.spin()
 
-
-def test():
-    robot = Robot()
-    import blue_approach # or any other data file
-    data = blue_approach.get_data()
-    robot.robot.load_data_profile(data)
-    for i in range(len(data)):
-        robot.spin()
-        print(f"objects = {robot.robot.get_camera_objects()}")
-        print(robot.camera_center)
-        print(robot.camera_resolution, robot.camera_field_of_view)
-        print(robot.closest_object_angle)
-        robot.robot.sleep(0.05)
+#
+# def test():
+#     robot = Robot()
+#     import blue_approach  # or any other data file
+#     data = blue_approach.get_data()
+#     robot.robot.load_data_profile(data)
+#     for i in range(len(data)):
+#         robot.spin()
+#         print(f"objects = {robot.robot.get_camera_objects()}")
+#         print(robot.camera_center)
+#         print(robot.camera_resolution, robot.camera_field_of_view)
+#         print(robot.closest_object_angle)
+#         robot.robot.sleep(0.05)
 
 
 if __name__ == "__main__":
-    test()
+    main()
