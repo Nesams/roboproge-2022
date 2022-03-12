@@ -72,7 +72,7 @@ class Robot:
 
 
 def main():
-    """Main entry point."""
+    """Main  entry point."""
     robot = Robot()
     robot.spin()
 
