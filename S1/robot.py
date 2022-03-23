@@ -111,6 +111,12 @@ class Robot:
 
     def full_scan(self):
         self.cameradetection()
+        if self.previous_state == "full_scan":
+            if self.encoder_odometry[2] == 0:
+                self.next_state = "move_to_point"
+            else:
+                self.drive(45, -1)
+                self.next_state = "full_scan"
 
     def move_to_point(self):
         if self.previous_state == "full_scan":
