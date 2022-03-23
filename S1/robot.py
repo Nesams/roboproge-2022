@@ -41,10 +41,10 @@ class Robot:
 
     def __init__(self, initial_odometry=[0, 0, 0]):
         """Initialize variables."""
-        self.right_goal_speed = None
-        self.right_wheel_speed = None
-        self.left_goal_speed = None
-        self.left_wheel_speed = None
+        self.right_goal_speed = 0
+        self.right_wheel_speed = 0
+        self.left_goal_speed = 0
+        self.left_wheel_speed = 0
         self.robot = PiBot.PiBot()
         self.detected_objects = []
 
