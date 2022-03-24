@@ -82,8 +82,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.1, 0.003, 0.002, 5)
-        self.right_controller = PIDController(0.1, 0.003, 0.002, 5)
+        self.left_controller = PIDController(0.5, 0.003, 0.002, 5)
+        self.right_controller = PIDController(0.5, 0.003, 0.002, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -150,7 +150,7 @@ class Robot:
             if self.angle_goal - math.radians(5) <= self.encoder_odometry[2] - math.radians(360) <= self.angle_goal + math.radians(5):
                 self.next_state = "drive_forward"
             else:
-                self.drive(2, -1)
+                self.drive(2, 1)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
