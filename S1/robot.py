@@ -115,7 +115,7 @@ class Robot:
             if self.encoder_odometry[2] > 358:
                 self.next_state = "move_to_point"
             else:
-                self.drive(2, 1)
+                self.drive(30, 1)
                 self.next_state = "full_scan"
 
     def move_to_point(self):
@@ -157,7 +157,7 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-            self.drive(2, 0)
+            self.drive(30, 0)
             self.next_state = "drive_forward"
 
     def stop(self):
