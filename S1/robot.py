@@ -113,7 +113,7 @@ class Robot:
     def full_scan(self):
         self.cameradetection()
         if self.previous_state == "full_scan":
-            if self.encoder_odometry[2] > 358:
+            if self.encoder_odometry[2] > math.radians(358):
                 self.next_state = "move_to_point"
             else:
                 self.drive(2, 1)
@@ -211,8 +211,8 @@ class Robot:
                 red_coordinates_x = self.red_coordinates_xy[0]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
-                red_object_angle = round((red_object_angle * math.pi) / 180, 2)
-                self.red_object_angle = red_object_angle
+                red_object_angle = (red_object_angle * math.pi) / 180
+                self.red_object_angle = red_object_angle + self.encoder_odometry[2]
                 print(self.red_object_angle)
             if object[0] == "blue sphere":
                 self.blue_coordinates_xy = object[1]
@@ -220,8 +220,8 @@ class Robot:
                 blue_coordinates_x = self.blue_coordinates_xy[0]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
-                blue_object_angle = round((blue_object_angle * math.pi) / 180, 2)
-                self.blue_object_angle = blue_object_angle
+                blue_object_angle = (blue_object_angle * math.pi) / 180
+                self.blue_object_angle = blue_object_angle + self.encoder_odometry[2]
                 print(self.blue_object_angle)
 
     def sense(self):
