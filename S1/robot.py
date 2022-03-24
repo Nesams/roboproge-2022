@@ -205,7 +205,7 @@ class Robot:
             pass
         for object in self.detected_objects:
             print(object)
-            if object[0] == "red sphere":
+            if object[0] == 'red sphere':
                 self.red_coordinates_xy = object[1]
                 self.red = object[0]
                 red_coordinates_x = self.red_coordinates_xy[0]
@@ -214,7 +214,7 @@ class Robot:
                 red_object_angle = (red_object_angle * math.pi) / 180
                 self.red_object_angle = red_object_angle + self.encoder_odometry[2]
                 print(self.red_object_angle)
-            if object[0] == "blue sphere":
+            if object[0] == 'blue sphere':
                 self.blue_coordinates_xy = object[1]
                 self.blue = object[0]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
