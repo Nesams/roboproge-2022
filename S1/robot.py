@@ -80,8 +80,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.1, 0.003, 0.002, 500)
-        self.right_controller = PIDController(0.1, 0.003, 0.002, 500)
+        self.left_controller = PIDController(0.1, 0.003, 0.002, 5)
+        self.right_controller = PIDController(0.1, 0.003, 0.002, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -116,7 +116,7 @@ class Robot:
             if self.encoder_odometry[2] > 358:
                 self.next_state = "move_to_point"
             else:
-                self.drive(30, 1)
+                self.drive(2, 1)
                 self.next_state = "full_scan"
 
     def move_to_point(self):
@@ -180,7 +180,11 @@ class Robot:
         :return:
         """
         self.left_goal_speed = min(1 - 2 * turning_rate, 1) * speed
+        print(self.left_goal_speed)
+        print(self.left_wheel_speed)
         self.right_goal_speed = min(1 + 2 * turning_rate, 1) * speed
+        print(self.left_goal_speed)
+        print(self.right_wheel_speed)
 
     def calculate_motor_power(self):
         """
