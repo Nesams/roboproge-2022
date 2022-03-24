@@ -145,11 +145,11 @@ class Robot:
                 self.goal_y = self.encoder_odometry[1] + (distance * math.sin(self.angle_goal))
             self.next_state = "move_to_point"
         else:
-            if self.encoder_odometry[2] != self.angle_goal:
+            if self.angle_goal - math.radians(5) <= self.encoder_odometry[2] - math.radians(360) <= self.angle_goal + math.radians(5):
+                self.next_state = "drive_forward"
+            else:
                 self.drive(2, -1)
                 self.next_state = "move_to_point"
-            else:
-                self.next_state = "drive_forward"
 
     def drive_forward(self):
         if self.goal_x - 0.05 < self.encoder_odometry[0] < self.goal_x + 0.05 and self.goal_y - 0.05 < self.encoder_odometry[1] < self.goal_y + 0.05:
