@@ -243,7 +243,7 @@ class Robot:
                         self.right_wheel_speed - self.left_wheel_speed) * self.delta_time
             self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
                 self.encoder_odometry[2]) * self.delta_time
-            self.encoder_odometry[1] += (self.wheel_radius / 2) * (left_speed + right_speed) * math.sin(
+            self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
                 self.encoder_odometry[2]) * self.delta_time
 
     def plan(self):
