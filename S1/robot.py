@@ -199,6 +199,7 @@ class Robot:
         if len(self.detected_objects) == 0:
             pass
         for object in self.detected_objects:
+            print(object)
             if object[0] == "red sphere":
                 self.red_coordinates_xy = object[1]
                 self.red = object[0]
@@ -233,7 +234,6 @@ class Robot:
         self.right_encoder = self.robot.get_right_wheel_encoder()
 
         self.detected_objects = self.robot.get_camera_objects()
-        #self.cameradetection()
 
         # Odometry
         if self.delta_time > 0:
