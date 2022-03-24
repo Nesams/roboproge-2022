@@ -217,6 +217,7 @@ class Robot:
             blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
             blue_object_angle = round((blue_object_angle * math.pi) / 180, 2)
             self.blue_object_angle = blue_object_angle
+            print(self.red_object_angle, self.blue_object_angle)
 
     def sense(self):
         """SPA architecture sense block."""
