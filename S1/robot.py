@@ -2,6 +2,7 @@
 import math
 import PiBot
 
+
 class PIDController:
     """PID-Controller class."""
 
@@ -145,7 +146,7 @@ class Robot:
             self.next_state = "move_to_point"
         else:
             if self.encoder_odometry[2] != self.angle_goal:
-                self.drive(30, -1)
+                self.drive(2, -1)
                 self.next_state = "move_to_point"
             else:
                 self.next_state = "drive_forward"
@@ -157,7 +158,7 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-            self.drive(30, 0)
+            self.drive(2, 0)
             self.next_state = "drive_forward"
 
     def stop(self):
