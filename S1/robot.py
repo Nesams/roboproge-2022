@@ -265,7 +265,7 @@ class Robot:
 
     def spin(self):
         """The spin loop."""
-        for _ in range(100):
+        while not self.robot.shutdown():
             self.sense()
             self.plan()
             self.act()
