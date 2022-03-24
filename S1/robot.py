@@ -79,8 +79,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.01, 0.003, 0.002, 500)
-        self.right_controller = PIDController(0.01, 0.003, 0.002, 500)
+        self.left_controller = PIDController(0.1, 0.003, 0.002, 500)
+        self.right_controller = PIDController(0.1, 0.003, 0.002, 500)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -145,7 +145,7 @@ class Robot:
             self.next_state = "move_to_point"
         else:
             if self.encoder_odometry[2] != self.angle_goal:
-                self.drive(2, -1)
+                self.drive(30, -1)
                 self.next_state = "move_to_point"
             else:
                 self.next_state = "drive_forward"
