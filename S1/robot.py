@@ -145,7 +145,7 @@ class Robot:
             self.next_state = "move_to_point"
         else:
             if self.encoder_odometry[2] != self.angle_goal:
-                self.drive(6, -1)
+                self.drive(4, -1)
                 self.next_state = "move_to_point"
             else:
                 self.next_state = "drive_forward"
@@ -157,7 +157,7 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-            self.drive(8, 0)
+            self.drive(4, 0)
             self.next_state = "drive_forward"
 
     def stop(self):
