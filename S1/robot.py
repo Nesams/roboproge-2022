@@ -201,7 +201,7 @@ class Robot:
 
     def cameradetection(self):
         """Calculating the closest object angle."""
-        if len(self.detected_objects) == 0:
+        if len(self.detected_objects) <= 1:
             pass
         for object in self.detected_objects:
             print(object)
