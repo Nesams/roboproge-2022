@@ -183,7 +183,7 @@ class Robot:
         print(self.left_goal_speed)
         print(self.left_wheel_speed)
         self.right_goal_speed = min(1 + 2 * turning_rate, 1) * speed
-        print(self.left_goal_speed)
+        print(self.right_goal_speed)
         print(self.right_wheel_speed)
 
     def calculate_motor_power(self):
