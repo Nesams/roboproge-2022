@@ -201,7 +201,7 @@ class Robot:
 
     def cameradetection(self):
         """Calculating the closest object angle."""
-        if len(self.detected_objects) <= 1:
+        if len(self.detected_objects) == 0:
             pass
         for object in self.detected_objects:
             print(object)
@@ -236,6 +236,8 @@ class Robot:
         self.left_encoder = self.robot.get_left_wheel_encoder()
         self.last_right_encoder = self.right_encoder
         self.right_encoder = self.robot.get_right_wheel_encoder()
+        self.left_delta = self.left_encoder - self.last_left_encoder
+        self.right_delta = self.right_encoder - self.last_right_encoder
 
         self.detected_objects = self.robot.get_camera_objects()
 
