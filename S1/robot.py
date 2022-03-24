@@ -115,7 +115,7 @@ class Robot:
             if self.encoder_odometry[2] > 358:
                 self.next_state = "move_to_point"
             else:
-                self.drive(45, -1)
+                self.drive(2, 1)
                 self.next_state = "full_scan"
 
     def move_to_point(self):
@@ -197,7 +197,7 @@ class Robot:
     def cameradetection(self):
         """Calculating the closest object angle."""
         if len(self.detected_objects) == 0:
-            return None
+            pass
         for object in self.detected_objects:
             if object[0] == "red sphere":
                 self.red_coordinates_xy = object[1]
