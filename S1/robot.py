@@ -42,6 +42,8 @@ class Robot:
 
     def __init__(self, initial_odometry=[0, 0, 0]):
         """Initialize variables."""
+        self.shutdown = False
+
         self.right_goal_speed = 0
         self.right_wheel_speed = 0
         self.left_goal_speed = 0
@@ -265,11 +267,13 @@ class Robot:
 
     def spin(self):
         """The spin loop."""
-        while not self.robot.shutdown():
+        while not self.shutdown:
             self.sense()
             self.plan()
             self.act()
             self.robot.sleep(0.05)
+            if self.robot.get_time() > 600:
+                self.shutdown = True
 
 def main():
     """Main  entry point."""
