@@ -209,7 +209,6 @@ class Robot:
             print(object)
             if object[0] == 'red sphere':
                 self.red_coordinates_xy = object[1]
-                self.red = object[0]
                 red_coordinates_x = self.red_coordinates_xy[0]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
@@ -218,7 +217,6 @@ class Robot:
                 print(self.red_object_angle)
             if object[0] == 'blue sphere':
                 self.blue_coordinates_xy = object[1]
-                self.blue = object[0]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
@@ -248,7 +246,7 @@ class Robot:
             self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
             self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
             self.encoder_odometry[2] += (self.wheel_radius / self.robot.AXIS_LENGTH) * (
-                        self.right_wheel_speed - self.left_wheel_speed) * self.delta_time
+                        self.right_encoder - self.left_encoder)
             self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
                 self.encoder_odometry[2]) * self.delta_time
             self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
