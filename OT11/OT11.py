@@ -53,6 +53,13 @@ class Robot:
         """Set the API reference."""
         self.robot = robot
 
+    def normalize_angle(self, angle):
+        while angle < 0:
+            angle += 2 * math.pi
+        while angle > 2 * math.pi:
+            angle -= 2 * math.pi
+        return angle
+
     def get_encoder_odometry(self):
         """
         Return the encoder odometry.
