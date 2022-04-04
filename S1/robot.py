@@ -125,7 +125,7 @@ class Robot:
         if self.previous_state == "full_scan":
             if math.radians(0) < (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
                 self.go_around = False
-                self.angle_goal = (self.blue_object_angle - self.red_object_angle) / 2 + math.radians(180)
+                self.angle_goal = (self.red_object_angle - self.blue_object_angle) / 2 + math.radians(180)
                 self.goal_x = (self.red_coordinates_xy[0] + self.blue_coordinates_xy[0]) / 2
                 self.goal_y = (self.red_coordinates_xy[1] + self.blue_coordinates_xy[1]) / 2
             elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
