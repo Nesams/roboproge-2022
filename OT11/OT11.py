@@ -62,6 +62,18 @@ class Robot:
            A tuple with x, y coordinates and yaw angle (x, y, yaw)
            based on encoder data. The units must be (meters, meters, radians).
         """
+        # odometry
+        if self.delta_time > 0:
+            self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
+            self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
+            self.encoder_odometry[2] = (self.wheel_radius / self.robot.AXIS_LENGTH) * (
+                    math.radians(self.right_encoder) - math.radians(self.left_encoder))
+            self.encoder_odometry[0] += (self.wheel_radius / 2) * (
+                        self.left_wheel_speed + self.right_wheel_speed) * math.cos(
+                self.encoder_odometry[2]) * self.delta_time
+            self.encoder_odometry[1] += (self.wheel_radius / 2) * (
+                        self.left_wheel_speed + self.right_wheel_speed) * math.sin(
+                self.encoder_odometry[2]) * self.delta_time
         return self.encoder_odometry[0], self.encoder_odometry[1], self.encoder_odometry[2]
 
     def update_world(self) -> None:
@@ -130,16 +142,9 @@ class Robot:
 
         self.detected_objects = self.robot.get_camera_objects()
 
-        #odometry
-        if self.delta_time > 0:
-            self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
-            self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
-            self.encoder_odometry[2] = (self.wheel_radius / self.robot.AXIS_LENGTH) * (
-                        math.radians(self.right_encoder) - math.radians(self.left_encoder))
-            self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
-                self.encoder_odometry[2]) * self.delta_time
-            self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
-                self.encoder_odometry[2]) * self.delta_time
+        self.get_encoder_odometry()
+
+
 
     def spin(self):
         """Spin loop."""
