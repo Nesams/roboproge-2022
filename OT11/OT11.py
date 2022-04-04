@@ -99,9 +99,10 @@ class Robot:
         """
         self.closest_object = 0
         closest_distance = 99999
-        for object in range(len(self.world_objects)):
-            x = self.world_objects[object][0]
-            y = self.world_objects[object][1]
+        for object in self.world_objects:
+            xy = self.world_objects[object]
+            x = xy[0]
+            y = xy[1]
             object_distance = math.sqrt(((x - self.encoder_odometry[0]) ** 2) + ((y - self.encoder_odometry[1]) ** 2))
             if object_distance < closest_distance:
                 closest_distance = object_distance
