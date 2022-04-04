@@ -173,7 +173,7 @@ class Robot:
             self.drive(0)
             self.next_state = "stop"
         else:
-            quit()
+            self.shutdown = True
 
     def drive(self, speed: int, turning_rate: float = 0):
         """
@@ -281,6 +281,7 @@ class Robot:
             self.robot.sleep(0.05)
             if self.robot.get_time() > 600:
                 self.shutdown = True
+        self.drive(0)
 
 def main():
     """Main  entry point."""
