@@ -115,7 +115,7 @@ class Robot:
                 self.closest_object = object
         if self.closest_object > 0:
             angle = math.atan2(self.world_objects[self.closest_object][1] - self.encoder_odometry[1], self.world_objects[self.closest_object][0] - self.encoder_odometry[0]) - self.encoder_odometry[2]
-            return angle
+            return self.normalize_angle(angle)
         else:
             return None
 
