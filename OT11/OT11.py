@@ -92,7 +92,7 @@ class Robot:
           closest object w.r.t. the robot heading following
           the right-hand rule.
           E.g., 0 if object is straight ahead,
-                1.57 if the object is 90 degrees to the left of the robot.
+                1.57 if the  object is 90 degrees to the left of the robot.
                 3.14 if the closest object is 180 degrees from the robot.
                 4.71 if the objectis 90 degrees to the right of the robot.
           None if no objects have been detected.
