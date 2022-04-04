@@ -160,7 +160,7 @@ class Robot:
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
-        print("Angles: ", self.angle_goal, self.encoder_odometry[2] - math.radians(360))
+        print("Angles:  ", self.angle_goal, self.encoder_odometry[2] - math.radians(360))
         print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
             self.start_x = self.encoder_odometry[0]
