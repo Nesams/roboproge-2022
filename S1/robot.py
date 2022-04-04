@@ -186,11 +186,11 @@ class Robot:
         :return:
         """
         self.left_goal_speed = min(1 - 2 * turning_rate, 1) * speed
-        print(self.left_goal_speed)
-        print(self.left_wheel_speed)
+        print("Left Goal Speed: ", self.left_goal_speed)
+        print("Left Actual speed: ", self.left_wheel_speed)
         self.right_goal_speed = min(1 + 2 * turning_rate, 1) * speed
-        print(self.right_goal_speed)
-        print(self.right_wheel_speed)
+        print("Right Goal Speed: ", self.right_goal_speed)
+        print("Left Actual Speed: ", self.right_wheel_speed)
 
     def calculate_motor_power(self):
         """
@@ -211,7 +211,7 @@ class Robot:
             pass
         for object in self.detected_objects:
             print(object)
-            print(self.robot.CAMERA_RESOLUTION[1])
+            print("Camera resolution0: ", self.robot.CAMERA_RESOLUTION[1])
             if object[0] == 'red sphere':
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
