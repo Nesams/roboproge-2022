@@ -54,6 +54,7 @@ class Robot:
         self.robot = robot
 
     def normalize_angle(self, angle):
+        """Normalizing angle. Range(π...2π)"""
         while angle < 0:
             angle += 2 * math.pi
         while angle > 2 * math.pi:
@@ -149,8 +150,6 @@ class Robot:
                     self.left_wheel_speed + self.right_wheel_speed) * math.sin(
                 self.encoder_odometry[2]) * self.delta_time
 
-
-
     def spin(self):
         """Spin loop."""
         for _ in range(100):
@@ -167,14 +166,17 @@ class Robot:
 #
 # if __name__ == "__main__":
 #     main()
+
+
 def test():
+    """Testing testing 123."""
     robot = Robot([0.201, -0.148, 1.529])  # initial odometry values (to compare with ground truth)
     import turn_and_straight
     data = turn_and_straight.get_data()
     robot.robot.load_data_profile(data)
 
     last_update = robot.robot.get_time()
-    for _ in range(int(robot.robot.data[-1][0]/0.05)):
+    for _ in range(int(robot.robot.data[-1][0] / 0.05)):
         robot.sense()
         print(f"ground truth = {robot.robot.get_ground_truth()}")
         if last_update + 1 < robot.robot.get_time():
