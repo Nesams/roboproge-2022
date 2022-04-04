@@ -88,12 +88,19 @@ class Robot:
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
-        self.blue_distance = 0
-        self.red_distance = 0
+        self.blue_distance = None
+        self.red_distance = None
+        self.red_x = None
+        self.red_y = None
+        self.blue_x = None
+        self.blue_y = None
 
         self.goal_x = 0
         self.goal_y = 0
         self.distance = 0
+        self.goal_distance = None
+        self.start_x = None
+        self.start_y = None
 
         self.go_around = False
 
@@ -128,9 +135,8 @@ class Robot:
         if self.previous_state == "full_scan":
             if math.radians(0) < (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
                 self.go_around = False
-                self.angle_goal = (self.red_object_angle - self.blue_object_angle) / 2 + math.radians(180)
-                self.goal_x = (self.red_coordinates_xy[0] + self.blue_coordinates_xy[0]) / 2
-                self.goal_y = (self.red_coordinates_xy[1] + self.blue_coordinates_xy[1]) / 2
+                self.angle_goal = (self.red_object_angle + self.blue_object_angle) / 2
+                self.goal_distance = (self.red_distance + self.blue_distance) / 2
             elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
                 angle = (self.blue_object_angle + self.red_object_angle) / 2
                 if angle < math.radians(180):
@@ -138,16 +144,13 @@ class Robot:
                 else:
                     self.angle_goal = angle - math.radians(180)
                 self.go_around = False
-                self.goal_x = (self.red_coordinates_xy[0] + self.blue_coordinates_xy[0]) / 2
-                self.goal_y = (self.red_coordinates_xy[1] + self.blue_coordinates_xy[1]) / 2
+                self.goal_distance = (self.red_distance + self.blue_distance) / 2
             else:
                 self.angle_goal = self.red_object_angle + math.radians(15)
                 if self.angle_goal >= math.radians(360):
                     self.angle_goal -= math.radians(360)
                 self.go_around = True
-                distance = 2 * math.sqrt(((self.red_coordinates_xy[0] - self.encoder_odometry[0]) ** 2) + ((self.red_coordinates_xy[1] - self.encoder_odometry[1]) ** 2))
-                self.goal_x = self.encoder_odometry[0] + (distance * math.cos(self.angle_goal))
-                self.goal_y = self.encoder_odometry[1] + (distance * math.sin(self.angle_goal))
+                self.goal_distance = 2 * math.sqrt(((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
             self.next_state = "move_to_point"
         else:
             if self.angle_goal - math.radians(2) <= self.encoder_odometry[2] - math.radians(360) <= self.angle_goal + math.radians(2):
@@ -157,8 +160,13 @@ class Robot:
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
-        print(self.angle_goal, self.encoder_odometry[2] - math.radians(360))
-        if self.goal_x - 0.05 < self.encoder_odometry[0] < self.goal_x + 0.05 and self.goal_y - 0.05 < self.encoder_odometry[1] < self.goal_y + 0.05:
+        print("Angles: ", self.angle_goal, self.encoder_odometry[2] - math.radians(360))
+        print("Goal Distance: ", self.goal_distance)
+        if self.previous_state != "drive_forward":
+            self.start_x = self.encoder_odometry[0]
+            self.start_y = self.encoder_odometry[1]
+        distance_traveled = math.sqrt((self.encoder_odometry[0] - self.start_x) ** 2 + (self.encoder_odometry[1] - self.start_y) ** 2)
+        if distance_traveled >= self.goal_distance:
             if self.go_around:
                 self.next_state = "full_scan"
             else:
@@ -211,7 +219,7 @@ class Robot:
             pass
         for object in self.detected_objects:
             print(object)
-            print("Camera resolution0: ", self.robot.CAMERA_RESOLUTION[1])
+            print("Camera resolution: ", self.robot.CAMERA_RESOLUTION[1])
             if object[0] == 'red sphere':
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
@@ -221,7 +229,9 @@ class Robot:
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
                 red_object_angle = (red_object_angle * math.pi) / 180
                 self.red_object_angle = red_object_angle + self.encoder_odometry[2]
-                print(self.red_object_angle)
+                self.red_x = self.red_distance * math.cos(self.red_object_angle)
+                self.red_y = self.red_distance * math.sin(self.red_object_angle)
+                print("Red object angle: ", self.red_object_angle)
             if object[0] == 'blue sphere':
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
@@ -231,7 +241,9 @@ class Robot:
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                 blue_object_angle = (blue_object_angle * math.pi) / 180
                 self.blue_object_angle = blue_object_angle + self.encoder_odometry[2]
-                print(self.blue_object_angle)
+                self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
+                self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
+                print("Blue object angle: ", self.blue_object_angle)
 
     def sense(self):
         """SPA architecture sense block."""
