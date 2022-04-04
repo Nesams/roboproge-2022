@@ -112,8 +112,6 @@ class Robot:
         else:
             return None
 
-
-
     def sense(self):
         """SPA architecture sense block."""
         # Read the current time
@@ -149,12 +147,31 @@ class Robot:
             print(f"objects = {self.robot.get_camera_objects()}")
             self.robot.sleep(0.05)
 
+#
+# def main():
+#     """The main entry point."""
+#     robot = Robot()
+#     robot.spin()
+#
+#
+# if __name__ == "__main__":
+#     main()
+def test():
+    robot = Robot([0.201, -0.148, 1.529])  # initial odometry values (to compare with ground truth)
+    import turn_and_straight
+    data = turn_and_straight.get_data()
+    robot.robot.load_data_profile(data)
 
-def main():
-    """The main entry point."""
-    robot = Robot()
-    robot.spin()
+    last_update = robot.robot.get_time()
+    for _ in range(int(robot.robot.data[-1][0]/0.05)):
+        robot.sense()
+        print(f"ground truth = {robot.robot.get_ground_truth()}")
+        if last_update + 1 < robot.robot.get_time():
+            robot.update_world()
+            last_update = robot.robot.get_time()
+        robot.robot.sleep(0.05)
+    print(f"closest object angle = {robot.get_closest_object_angle()}")
 
 
 if __name__ == "__main__":
-    main()
+    test()
