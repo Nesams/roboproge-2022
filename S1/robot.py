@@ -236,7 +236,7 @@ class Robot:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
                 blue_coordinates_y = self.robot.CAMERA_RESOLUTION[1] - self.blue_coordinates_xy[1] - object[2]
-                self.red_distance = blue_coordinates_y / 700
+                self.blue_distance = blue_coordinates_y / 700
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                 blue_object_angle = (blue_object_angle * math.pi) / 180
