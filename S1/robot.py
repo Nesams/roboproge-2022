@@ -132,7 +132,7 @@ class Robot:
                 self.goal_x = (self.red_coordinates_xy[0] + self.blue_coordinates_xy[0]) / 2
                 self.goal_y = (self.red_coordinates_xy[1] + self.blue_coordinates_xy[1]) / 2
             elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
-                angle = (self.blue_object_angle - self.red_object_angle) / 2
+                angle = (self.blue_object_angle + self.red_object_angle) / 2
                 if angle < math.radians(180):
                     self.angle_goal = angle + math.radians(180)
                 else:
@@ -157,6 +157,7 @@ class Robot:
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
+        print(self.angle_goal, self.encoder_odometry[2] - math.radians(360))
         if self.goal_x - 0.05 < self.encoder_odometry[0] < self.goal_x + 0.05 and self.goal_y - 0.05 < self.encoder_odometry[1] < self.goal_y + 0.05:
             if self.go_around:
                 self.next_state = "full_scan"
