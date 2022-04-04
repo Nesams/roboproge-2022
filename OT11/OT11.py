@@ -21,7 +21,7 @@ class Robot:
         self.left_wheel_speed = 0
         self.right_wheel_speed = 0
         self.encoder_odometry = initial_odometry.copy()
-        self.wheel_radius = 0
+        self.wheel_radius = self.robot.WHEEL_DIAMETER / 2
 
         self.time = 0
         self.last_time = 0
@@ -121,7 +121,7 @@ class Robot:
                 self.closest_object = object
         if self.closest_object > 0:
             angle = math.atan2(self.world_objects[self.closest_object][1] - self.encoder_odometry[1], self.world_objects[self.closest_object][0] - self.encoder_odometry[0]) - self.encoder_odometry[2]
-            return angle + math.radians(360)
+            return angle
         else:
             return None
 
@@ -153,31 +153,31 @@ class Robot:
             print(f"objects = {self.robot.get_camera_objects()}")
             self.robot.sleep(0.05)
 
-
-def main():
-    """The main entry point."""
-    robot = Robot()
-    robot.spin()
-
-
-if __name__ == "__main__":
-    main()
-# def test():
-#     robot = Robot([0.201, -0.148, 1.529])  # initial odometry values (to compare with ground truth)
-#     import turn_and_straight
-#     data = turn_and_straight.get_data()
-#     robot.robot.load_data_profile(data)
 #
-#     last_update = robot.robot.get_time()
-#     for _ in range(int(robot.robot.data[-1][0]/0.05)):
-#         robot.sense()
-#         print(f"ground truth = {robot.robot.get_ground_truth()}")
-#         if last_update + 1 < robot.robot.get_time():
-#             robot.update_world()
-#             last_update = robot.robot.get_time()
-#         robot.robot.sleep(0.05)
-#     print(f"closest object angle = {robot.get_closest_object_angle()}")
+# def main():
+#     """The main entry point."""
+#     robot = Robot()
+#     robot.spin()
 #
 #
 # if __name__ == "__main__":
-#     test()
+#     main()
+def test():
+    robot = Robot([0.201, -0.148, 1.529])  # initial odometry values (to compare with ground truth)
+    import turn_and_straight
+    data = turn_and_straight.get_data()
+    robot.robot.load_data_profile(data)
+
+    last_update = robot.robot.get_time()
+    for _ in range(int(robot.robot.data[-1][0]/0.05)):
+        robot.sense()
+        print(f"ground truth = {robot.robot.get_ground_truth()}")
+        if last_update + 1 < robot.robot.get_time():
+            robot.update_world()
+            last_update = robot.robot.get_time()
+        robot.robot.sleep(0.05)
+    print(f"closest object angle = {robot.get_closest_object_angle()}")
+
+
+if __name__ == "__main__":
+    test()
