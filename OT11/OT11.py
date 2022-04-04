@@ -49,7 +49,6 @@ class Robot:
         self.camera_field_of_view = self.robot.CAMERA_FIELD_OF_VIEW[0]
         self.camera_center = self.camera_resolution / 2
 
-
     def set_robot(self, robot: PiBot.PiBot()) -> None:
         """Set the API reference."""
         self.robot = robot
@@ -62,18 +61,6 @@ class Robot:
            A tuple with x, y coordinates and yaw angle (x, y, yaw)
            based on encoder data. The units must be (meters, meters, radians).
         """
-        # odometry
-        if self.delta_time > 0:
-            self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
-            self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
-            self.encoder_odometry[2] = (self.wheel_radius / self.robot.AXIS_LENGTH) * (
-                    math.radians(self.right_encoder) - math.radians(self.left_encoder))
-            self.encoder_odometry[0] += (self.wheel_radius / 2) * (
-                        self.left_wheel_speed + self.right_wheel_speed) * math.cos(
-                self.encoder_odometry[2]) * self.delta_time
-            self.encoder_odometry[1] += (self.wheel_radius / 2) * (
-                        self.left_wheel_speed + self.right_wheel_speed) * math.sin(
-                self.encoder_odometry[2]) * self.delta_time
         return self.encoder_odometry[0], self.encoder_odometry[1], self.encoder_odometry[2]
 
     def update_world(self) -> None:
@@ -142,7 +129,18 @@ class Robot:
 
         self.detected_objects = self.robot.get_camera_objects()
 
-        self.get_encoder_odometry()
+        # odometry
+        if self.delta_time > 0:
+            self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
+            self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
+            self.encoder_odometry[2] = (self.wheel_radius / self.robot.AXIS_LENGTH) * (
+                    math.radians(self.right_encoder) - math.radians(self.left_encoder))
+            self.encoder_odometry[0] += (self.wheel_radius / 2) * (
+                    self.left_wheel_speed + self.right_wheel_speed) * math.cos(
+                self.encoder_odometry[2]) * self.delta_time
+            self.encoder_odometry[1] += (self.wheel_radius / 2) * (
+                    self.left_wheel_speed + self.right_wheel_speed) * math.sin(
+                self.encoder_odometry[2]) * self.delta_time
 
 
 
