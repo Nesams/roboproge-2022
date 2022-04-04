@@ -68,6 +68,7 @@ class Robot:
         self.angle_goal = 0
 
         self.camera_resolution = self.robot.CAMERA_RESOLUTION[0]
+        self.camera_y_resolution = self.robot.CAMERA_RESOLUTION[1]
         self.camera_field_of_view = self.robot.CAMERA_FIELD_OF_VIEW[0]
         self.camera_center = self.camera_resolution / 2
 
@@ -82,11 +83,13 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.5, 0.003, 0.002, 5)
-        self.right_controller = PIDController(0.5, 0.003, 0.002, 5)
+        self.left_controller = PIDController(0.4, 0.003, 0.002, 5)
+        self.right_controller = PIDController(0.4, 0.003, 0.002, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
+        self.blue_distance = 0
+        self.red_distance = 0
 
         self.goal_x = 0
         self.goal_y = 0
@@ -207,9 +210,11 @@ class Robot:
             pass
         for object in self.detected_objects:
             print(object)
+            print(self.robot.CAMERA_RESOLUTION[1])
             if object[0] == 'red sphere':
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
+                red_coordinates_y = self.robot.CAMERA_RESOLUTION[1] - self.red_coordinates_xy[1] - self.object[2]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
                 red_object_angle = (red_object_angle * math.pi) / 180
@@ -218,6 +223,7 @@ class Robot:
             if object[0] == 'blue sphere':
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
+                blue_coordinates_y = self.robot.CAMERA_RESOLUTION[1] - self.blue_coordinates_xy[1] - self.object[2]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                 blue_object_angle = (blue_object_angle * math.pi) / 180
