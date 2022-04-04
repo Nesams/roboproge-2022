@@ -123,31 +123,31 @@ class Robot:
 
     def move_to_point(self):
         if self.previous_state == "full_scan":
-            if 0 < (self.blue_object_angle - self.red_object_angle) <= 180:
+            if math.radians(0) < (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
                 self.go_around = False
                 self.angle_goal = (self.blue_object_angle - self.red_object_angle) / 2
                 self.goal_x = (self.red_coordinates_xy[0] + self.blue_coordinates_xy[0]) / 2
                 self.goal_y = (self.red_coordinates_xy[1] + self.blue_coordinates_xy[1]) / 2
-            elif (self.blue_object_angle - self.red_object_angle) <= -180:
+            elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
                 angle = (self.blue_object_angle - self.red_object_angle) / 2
-                if angle < 180:
-                    self.angle_goal = angle + 180
+                if angle < math.radians(180):
+                    self.angle_goal = angle + math.radians(180)
                 else:
-                    self.angle_goal = angle - 180
+                    self.angle_goal = angle - math.radians(180)
                 self.go_around = False
                 self.goal_x = (self.red_coordinates_xy[0] + self.blue_coordinates_xy[0]) / 2
                 self.goal_y = (self.red_coordinates_xy[1] + self.blue_coordinates_xy[1]) / 2
             else:
-                self.angle_goal = self.red_object_angle + 15
-                if self.angle_goal >= 360:
-                    self.angle_goal -= 360
+                self.angle_goal = self.red_object_angle + math.radians(15)
+                if self.angle_goal >= math.radians(360):
+                    self.angle_goal -= math.radians(360)
                 self.go_around = True
                 distance = 2 * math.sqrt(((self.red_coordinates_xy[0] - self.encoder_odometry[0]) ** 2) + ((self.red_coordinates_xy[1] - self.encoder_odometry[1]) ** 2))
                 self.goal_x = self.encoder_odometry[0] + (distance * math.cos(self.angle_goal))
                 self.goal_y = self.encoder_odometry[1] + (distance * math.sin(self.angle_goal))
             self.next_state = "move_to_point"
         else:
-            if self.angle_goal - math.radians(5) <= self.encoder_odometry[2] - math.radians(180) <= self.angle_goal + math.radians(5):
+            if self.angle_goal - math.radians(5) <= self.encoder_odometry[2] - math.radians(360) <= self.angle_goal + math.radians(5):
                 self.next_state = "drive_forward"
             else:
                 self.drive(2, 1)
