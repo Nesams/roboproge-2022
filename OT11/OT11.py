@@ -54,7 +54,7 @@ class Robot:
         self.robot = robot
 
     def normalize_angle(self, angle):
-        """Normalizing angle. Range(π...2π)"""
+        """Normalizing angle. Range(π...2π)."""
         while angle < 0:
             angle += 2 * math.pi
         while angle > 2 * math.pi:
@@ -141,13 +141,13 @@ class Robot:
         if self.delta_time > 0:
             self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
             self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
-            self.encoder_odometry[2] = (self.wheel_radius / self.robot.AXIS_LENGTH) * (
-                    math.radians(self.right_encoder) - math.radians(self.left_encoder))
-            self.encoder_odometry[0] += (self.wheel_radius / 2) * (
-                    self.left_wheel_speed + self.right_wheel_speed) * math.cos(
+            self.encoder_odometry[2] = (self.wheel_radius / self.robot.AXIS_LENGTH) *\
+                                       (math.radians(self.right_encoder) - math.radians(self.left_encoder))
+            self.encoder_odometry[0] += (self.wheel_radius / 2) *\
+                                        (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
                 self.encoder_odometry[2]) * self.delta_time
-            self.encoder_odometry[1] += (self.wheel_radius / 2) * (
-                    self.left_wheel_speed + self.right_wheel_speed) * math.sin(
+            self.encoder_odometry[1] += (self.wheel_radius / 2) *\
+                                        (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
                 self.encoder_odometry[2]) * self.delta_time
 
     def spin(self):
