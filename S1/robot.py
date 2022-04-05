@@ -102,7 +102,9 @@ class Robot:
         self.goal_distance = None
         self.start_x = None
         self.start_y = None
-        self.rotation = 0
+        self.rotation = 0.0
+        self.rotation_raw = 0.0
+        self.rotation_base = 0.0
 
         self.go_around = False
 
@@ -279,10 +281,11 @@ class Robot:
                 self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
                 self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
                 print("Blue object angle: ", self.blue_object_angle)
-                print("Blue angle with degrees: ", self.get_rotation())
+                print("Blue angle with degrees: ", self.get_rotation)
 
     def reset_rotation(self):
-        self.rotation = 0
+        """Reset rotation."""
+        self.rotation_base = self.rotation_raw
 
     def sense(self):
         """SPA architecture sense block."""
@@ -298,7 +301,8 @@ class Robot:
         self.right_encoder = self.robot.get_right_wheel_encoder()
         self.left_delta = self.left_encoder - self.last_left_encoder
         self.right_delta = self.right_encoder - self.last_right_encoder
-        self.rotation = self.robot.get_rotation()
+        self.rotation_raw = self.robot.get_rotation
+        self.rotation = self.rotation_raw - self.rotation_base
         if self.get_rotation() > 360:
             self.reset_rotation()
         self.detected_objects = self.robot.get_camera_objects()
