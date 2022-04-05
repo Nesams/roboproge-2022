@@ -233,7 +233,7 @@ class Robot:
             if object[0] == 'red sphere':
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
-                self.red_distance = 30 / object[2]
+                self.red_distance = 15 / object[2]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
                 red_object_angle = (red_object_angle * math.pi) / 180
@@ -244,7 +244,7 @@ class Robot:
             if object[0] == 'blue sphere':
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
-                self.blue_distance = 30 / object[2]
+                self.blue_distance = 15 / object[2]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                 blue_object_angle = (blue_object_angle * math.pi) / 180
