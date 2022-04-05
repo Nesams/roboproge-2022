@@ -175,7 +175,7 @@ class Robot:
                 self.goal_distance = 2 * math.sqrt(((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
             self.next_state = "move_to_point"
         else:
-            print("Get rotation: ", self.get_rotation())
+            print("Get rotation:  ", self.get_rotation())
             if self.angle_goal_deg - 3 <= self.get_rotation() <= self.angle_goal_deg + 3:
                 print("right angle!")
                 self.next_state = "drive_forward"
