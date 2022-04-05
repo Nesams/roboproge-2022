@@ -117,6 +117,14 @@ class Robot:
         """Set the API reference."""
         self.robot = robot
 
+    def normalize_angle(self, angle):
+        """Normalizing angle. Range(π...2π)."""
+        while angle < 0:
+            angle += 2 * math.pi
+        while angle > 2 * math.pi:
+            angle -= 2 * math.pi
+        return angle
+
     def start(self):
         """Grabbers down."""
         self.robot.set_grabber_height(0)
@@ -125,7 +133,7 @@ class Robot:
     def full_scan(self):
         self.cameradetection()
         if self.previous_state == "full_scan":
-            if self.encoder_odometry[2] > math.radians(358):
+            if self.red_object_angle is not None and self.blue_object_angle is not None:
                 self.next_state = "move_to_point"
             else:
                 self.drive(2, 1)
@@ -134,17 +142,19 @@ class Robot:
     def move_to_point(self):
         if self.previous_state == "full_scan":
             if math.radians(0) < (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
+                # if 0 degrees is not between the two spheres and blue is on right side
                 self.go_around = False
-                self.angle_goal = (self.red_object_angle + self.blue_object_angle) / 2
-                self.goal_distance = (self.red_distance + self.blue_distance) / 2
+                self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
+                self.goal_x = (self.red_x + self.blue_x) / 2
+                self.goal_y = (self.red_y + self.blue_y) / 2
+                self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
-                angle = (self.blue_object_angle + self.red_object_angle) / 2
-                if angle < math.radians(180):
-                    self.angle_goal = angle + math.radians(180)
-                else:
-                    self.angle_goal = angle - math.radians(180)
+                # if 0 degrees is between the two spheres and blue is on the right side
+                self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + math.radians(180))
                 self.go_around = False
-                self.goal_distance = (self.red_distance + self.blue_distance) / 2
+                self.goal_x = (self.red_x + self.blue_x) / 2
+                self.goal_y = (self.red_y + self.blue_y) / 2
+                self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             else:
                 self.angle_goal = self.red_object_angle + math.radians(15)
                 if self.angle_goal >= math.radians(360):
@@ -153,10 +163,10 @@ class Robot:
                 self.goal_distance = 2 * math.sqrt(((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
             self.next_state = "move_to_point"
         else:
-            if self.angle_goal - math.radians(2) <= self.encoder_odometry[2] - math.radians(360) <= self.angle_goal + math.radians(2):
+            if self.angle_goal - math.radians(2) <= self.encoder_odometry[2] <= self.angle_goal + math.radians(2):
                 self.next_state = "drive_forward"
             else:
-                self.drive(2, 1)
+                self.drive(2, -1)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
@@ -223,24 +233,22 @@ class Robot:
             if object[0] == 'red sphere':
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
-                red_coordinates_y = self.robot.CAMERA_RESOLUTION[1] - self.red_coordinates_xy[1] - object[2]
-                self.red_distance = red_coordinates_y / 700
+                self.red_distance = 30 / object[2]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
                 red_object_angle = (red_object_angle * math.pi) / 180
-                self.red_object_angle = red_object_angle + self.encoder_odometry[2]
+                self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
                 self.red_x = self.red_distance * math.cos(self.red_object_angle)
                 self.red_y = self.red_distance * math.sin(self.red_object_angle)
                 print("Red object angle: ", self.red_object_angle)
             if object[0] == 'blue sphere':
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
-                blue_coordinates_y = self.robot.CAMERA_RESOLUTION[1] - self.blue_coordinates_xy[1] - object[2]
-                self.blue_distance = blue_coordinates_y / 700
+                self.blue_distance = 30 / object[2]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                 blue_object_angle = (blue_object_angle * math.pi) / 180
-                self.blue_object_angle = blue_object_angle + self.encoder_odometry[2]
+                self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
                 self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
                 self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
                 print("Blue object angle: ", self.blue_object_angle)
@@ -272,6 +280,8 @@ class Robot:
                 self.encoder_odometry[2]) * self.delta_time
             self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
                 self.encoder_odometry[2]) * self.delta_time
+            self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
+            print("Odometry:", self.encoder_odometry)
 
     def plan(self):
         print("State: ", self.state)
