@@ -84,10 +84,9 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.4, 0.004, 0.002, 5)
-        self.right_controller = PIDController(0.4, 0.004, 0.002, 5)
+        self.left_controller = PIDController(0.1, 0.004, 0.002, 5)
+        self.right_controller = PIDController(0.1, 0.004, 0.002, 5)
 
-        self.reset_pid_controller = PIDController(0.4, 0.004, 0.002, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -208,12 +207,6 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-        #     if self.time > self.forward_start_time + 10:
-        #         self.drive(0, 0)
-        #         self.red_object_angle = None
-        #         self.blue_object_angle = None
-        #         self.next_state = "full_scan"
-        #    else:
             self.drive(5, 0)
             self.next_state = "drive_forward"
 
