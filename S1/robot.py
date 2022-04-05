@@ -180,6 +180,7 @@ class Robot:
             self.next_state = "move_to_point"
         else:
             print("Get rotation:  ", self.get_rotation())
+            print("angle goal for turning", self.angle_goal_deg)
             if self.angle_goal_deg - 3 <= self.get_rotation() <= self.angle_goal_deg + 3:
                 print("right angle!")
                 self.next_state = "drive_forward"
