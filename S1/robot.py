@@ -350,6 +350,7 @@ class Robot:
             self.robot.sleep(0.05)
         self.drive(0)
 
+
 def main():
     """Main  entry point."""
     robot = Robot()
