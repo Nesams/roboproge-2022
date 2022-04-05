@@ -143,6 +143,7 @@ class Robot:
         if self.previous_state == "full_scan":
             if math.radians(0) < (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
                 # if 0 degrees is not between the two spheres and blue is on right side
+                print("both spheres are on one side of 0 and correct orientation")
                 self.go_around = False
                 self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
                 self.goal_x = (self.red_x + self.blue_x) / 2
@@ -172,7 +173,7 @@ class Robot:
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
-        print("Angles:  ", self.angle_goal, self.encoder_odometry[2] - math.radians(360))
+        print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
             self.start_x = self.encoder_odometry[0]
@@ -304,8 +305,6 @@ class Robot:
             self.plan()
             self.act()
             self.robot.sleep(0.05)
-            if self.robot.get_time() > 600:
-                self.shutdown = True
         self.drive(0)
 
 def main():
