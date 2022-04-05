@@ -84,8 +84,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.4, 0.003, 0.002, 5)
-        self.right_controller = PIDController(0.4, 0.003, 0.002, 5)
+        self.left_controller = PIDController(0.00001, 0.004, 0.00001, 1)
+        self.right_controller = PIDController(0.00001, 0.004, 0.00001, 1)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
