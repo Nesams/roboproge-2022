@@ -281,7 +281,7 @@ class Robot:
                 self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
                 self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
                 print("Blue object angle: ", self.blue_object_angle)
-                print("Blue angle with degrees: ", self.get_rotation)
+                print("Blue angle with degrees: ", self.get_rotation())
 
     def reset_rotation(self):
         """Reset rotation."""
