@@ -248,13 +248,14 @@ class Robot:
         Calculate the power for both motor to achieve the desired speed.
         :return: None
         """
-        left_error = self.left_wheel_speed - self.left_goal_speed
-        right_error = self.right_wheel_speed - self.right_goal_speed
-        self.left_power -= round(self.left_controller.get_correction(left_error))
-        self.right_power -= round(self.right_controller.get_correction(right_error))
         if self.left_goal_speed == 0 and self.right_goal_speed == 0:
             self.left_power = 0
             self.right_power = 0
+        else:
+            left_error = self.left_wheel_speed - self.left_goal_speed
+            right_error = self.right_wheel_speed - self.right_goal_speed
+            self.left_power -= round(self.left_controller.get_correction(left_error))
+            self.right_power -= round(self.right_controller.get_correction(right_error))
 
     def cameradetection(self):
         """Calculating the closest object angle."""
@@ -266,7 +267,7 @@ class Robot:
             if object[0] == 'red sphere' and not self.red_object_angle:
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
-                self.red_distance = 10 / object[2]
+                self.red_distance = 14 / object[2]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
                 self.red_object_angle_deg = self.get_rotation() + red_object_angle
@@ -279,7 +280,7 @@ class Robot:
             if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
-                self.blue_distance = 10 / object[2]
+                self.blue_distance = 14 / object[2]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                 self.blue_object_angle_deg = self.get_rotation() + blue_object_angle
