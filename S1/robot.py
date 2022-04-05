@@ -15,13 +15,19 @@ class PIDController:
         :param kd: Constant multiplier for the derivative component.
         :param max_integral: Max allowed value for the integral.
         """
+        self.wheel_error_sum = 0
+        self.wheel_previous_error = 0
+        self.wheel_distance_ref = 0
+        self.pid_output = 0
         self.kp = kp
         self.ki = ki
         self.kd = kd
-
         self.last = 0
         self.integral = 0
         self.max_integral = max_integral
+
+    def set_desired_pid_speed(self, speed: float):
+        self.wheel_distance_ref = speed
 
     def get_correction(self, error):
         """
@@ -35,6 +41,14 @@ class PIDController:
                      + self.kd * (error - self.last)
         self.last = (self.last + error) / 2
         return correction
+
+    def update_pid(self):
+        self.wheel_error_sum += self.wheel_previous_error
+        self.wheel_previous_error = self.wheel_distance_ref
+        self.pid_output = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
+
+    def get_pid_output(self):
+        return self.pid_output
 
 
 class Robot:
@@ -145,9 +159,13 @@ class Robot:
         if self.previous_state == "full_scan":
             if self.get_rotation() > 350 and self.red_object_angle is not None and self.blue_object_angle is not None:
                 self.next_state = "move_to_point"
-                self.drive(0, 0)
+                self.right_controller.set_desired_pid_speed(0)
+                self.left_controller.set_desired_pid_speed(0)
+                #self.drive(0, 0)
             else:
-                self.drive(1, 1)
+                self.left_controller.set_desired_pid_speed(-200)
+                self.right_controller.set_desired_pid_speed(200)
+                #self.drive(1, 1)
                 self.next_state = "full_scan"
 
     def move_to_point(self):
@@ -331,6 +349,13 @@ class Robot:
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
             #print("Odometry:", self.encoder_odometry)
 
+        if self.delta_time != 0:
+            self.left_wheel_distance = (self.left_encoder - self.last_left_encoder) / self.delta_time
+            self.right_wheel_distance = (self.right_encoder - self.last_right_encoder) / self.delta_time
+
+        self.left_controller.update_pid()
+        self.right_controller.update_pid()
+
     def plan(self):
         print("State: ", self.state)
         self.states[self.state]()
@@ -339,8 +364,8 @@ class Robot:
 
     def act(self):
         self.calculate_motor_power()
-        self.robot.set_left_wheel_speed(self.left_power)
-        self.robot.set_right_wheel_speed(self.right_power)
+        self.robot.set_left_wheel_speed(self.left_controller.get_pid_output())
+        self.robot.set_right_wheel_speed(self.right_controller.get_pid_output())
 
     def spin(self):
         """The spin loop."""
