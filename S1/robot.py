@@ -204,7 +204,7 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-            if self.time > self.forward_start_time + 2:
+            if self.time > self.forward_start_time + 10:
                 self.drive(0, 0)
                 self.red_object_angle = None
                 self.blue_object_angle = None
