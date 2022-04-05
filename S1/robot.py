@@ -109,6 +109,9 @@ class Robot:
         self.red_object_angle = None
         self.blue_object_angle = None
 
+        self.red_object_angle_deg = None
+        self.blue_object_angle_deg = None
+
         self.red = None
         self.blue = None
 
