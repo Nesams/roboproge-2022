@@ -151,7 +151,7 @@ class Robot:
 
     def move_to_point(self):
         if self.previous_state == "full_scan":
-            if math.radians(0) < (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
+            if math.radians(0) <= (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
                 # if 0 degrees is not between the two spheres and blue is on right side
                 print("both spheres are on one side of 0 and correct orientation")
                 self.go_around = False
