@@ -62,6 +62,7 @@ class Robot:
         self.right_delta = 0
         self.left_power = 0
         self.right_power = 0
+        self.forward_start_time = None
 
         self.encoder_odometry = initial_odometry.copy()
         self.wheel_radius = self.robot.WHEEL_DIAMETER / 2
@@ -171,13 +172,14 @@ class Robot:
                 self.next_state = "drive_forward"
                 self.drive(0, 0)
             else:
-                self.drive(2, -1)
+                self.drive(2, 1)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
         print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
+            self.forward_start_time = self.time
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
         distance_traveled = math.sqrt((self.encoder_odometry[0] - self.start_x) ** 2 + (self.encoder_odometry[1] - self.start_y) ** 2)
@@ -188,8 +190,18 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-            self.drive(2, 0)
-            self.next_state = "drive_forward"
+            if self.time > self.forward_start_time + 2:
+                self.drive(0, 0)
+                self.red_object_angle = None
+                self.blue_object_angle = None
+                self.next_state = "full_scan"
+            else:
+                self.drive(2, 0)
+                self.next_state = "drive_forward"
+
+    def get_rotation(self):
+        """Getter method."""
+        return abs(self.rotation)
 
     def stop(self):
         """Default end state."""
