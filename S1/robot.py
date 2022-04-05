@@ -84,8 +84,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.4, 0.004, 0.002, 10)
-        self.right_controller = PIDController(0.4, 0.004, 0.002, 10)
+        self.left_controller = PIDController(0.2, 0.0004, 0.0002, 10)
+        self.right_controller = PIDController(0.2, 0.0004, 0.0002, 10)
 
 
         self.red_coordinates_xy = ()
@@ -249,8 +249,14 @@ class Robot:
             self.right_power = 0
         else:
             left_error = self.left_wheel_speed - self.left_goal_speed
+            print("Left error: ", left_error)
+            print("")
             right_error = self.right_wheel_speed - self.right_goal_speed
+            print("Right error: ", right_error)
+            print("")
             self.left_power -= round(self.left_controller.get_correction(left_error))
+            print("left power: ", self.left_power)
+            print("")
             self.right_power -= round(self.right_controller.get_correction(right_error))
 
     def cameradetection(self):
@@ -340,7 +346,7 @@ class Robot:
             self.sense()
             self.plan()
             self.act()
-            self.robot.sleep(0.05)
+            self.robot.sleep(0.01)
         self.drive(0)
 
 
