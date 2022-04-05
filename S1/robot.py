@@ -204,14 +204,14 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-            if self.time > self.forward_start_time + 10:
-                self.drive(0, 0)
-                self.red_object_angle = None
-                self.blue_object_angle = None
-                self.next_state = "full_scan"
-            else:
-                self.drive(2, 0)
-                self.next_state = "drive_forward"
+        #     if self.time > self.forward_start_time + 10:
+        #         self.drive(0, 0)
+        #         self.red_object_angle = None
+        #         self.blue_object_angle = None
+        #         self.next_state = "full_scan"
+        #    else:
+            self.drive(2, 0)
+            self.next_state = "drive_forward"
 
     def get_rotation(self):
         """Getter method."""
