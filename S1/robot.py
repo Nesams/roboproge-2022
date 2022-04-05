@@ -170,6 +170,7 @@ class Robot:
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             else:
+                print("wrong orientation")
                 self.angle_goal = self.normalize_angle(self.red_object_angle + math.radians(15))
                 if self.angle_goal >= math.radians(360):
                     self.angle_goal -= math.radians(360)
