@@ -149,6 +149,7 @@ class Robot:
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
+                print("both spheres are on different sides of 0 and correct orientation")
                 # if 0 degrees is between the two spheres and blue is on the right side
                 self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + math.radians(180))
                 self.go_around = False
@@ -156,7 +157,7 @@ class Robot:
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             else:
-                self.angle_goal = self.red_object_angle + math.radians(15)
+                self.angle_goal = self.normalize_angle(self.red_object_angle + math.radians(15))
                 if self.angle_goal >= math.radians(360):
                     self.angle_goal -= math.radians(360)
                 self.go_around = True
@@ -164,6 +165,7 @@ class Robot:
             self.next_state = "move_to_point"
         else:
             if self.angle_goal - math.radians(2) <= self.encoder_odometry[2] <= self.angle_goal + math.radians(2):
+                print("right angle!")
                 self.next_state = "drive_forward"
             else:
                 self.drive(2, -1)
