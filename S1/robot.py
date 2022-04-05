@@ -84,8 +84,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.4, 0.003, 0.001, 5)
-        self.right_controller = PIDController(0.4, 0.003, 0.001, 5)
+        self.left_controller = PIDController(0.04, 0.003, 0.001, 5)
+        self.right_controller = PIDController(0.04, 0.003, 0.001, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -146,7 +146,7 @@ class Robot:
                 self.next_state = "move_to_point"
                 self.drive(0, 0)
             else:
-                self.drive(2, 1)
+                self.drive(1, 1)
                 self.next_state = "full_scan"
 
     def move_to_point(self):
@@ -187,7 +187,7 @@ class Robot:
                 self.drive(0, 0)
             else:
                 print("Angle Goal: ", self.angle_goal_deg)
-                self.drive(2, 1)
+                self.drive(1, 1)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
@@ -211,7 +211,7 @@ class Robot:
         #         self.blue_object_angle = None
         #         self.next_state = "full_scan"
         #    else:
-            self.drive(2, 0)
+            self.drive(1, 0)
             self.next_state = "drive_forward"
 
     def get_rotation(self):
@@ -275,7 +275,7 @@ class Robot:
                 self.red_x = self.red_distance * math.cos(self.red_object_angle)
                 self.red_y = self.red_distance * math.sin(self.red_object_angle)
                 print("Red object angle: ", self.red_object_angle_deg)
-                print("red angle with degrees: ", self.get_rotation())
+                print("robot angle: ", self.get_rotation())
             if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
@@ -288,7 +288,7 @@ class Robot:
                 self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
                 self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
                 print("Blue object angle: ", self.blue_object_angle_deg)
-                print("Blue angle with degrees: ", self.get_rotation())
+                print("robot angle: ", self.get_rotation())
 
     def reset_rotation(self):
         """Reset rotation."""
