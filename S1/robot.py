@@ -104,7 +104,7 @@ class Robot:
         self.start_y = None
         self.rotation = 0.0
         self.rotation_raw = 0.0
-        self.rotation_base = 0.0
+        self.rotation_base =
 
         self.go_around = False
 
