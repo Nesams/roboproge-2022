@@ -260,7 +260,7 @@ class Robot:
                 self.red_x = self.red_distance * math.cos(self.red_object_angle)
                 self.red_y = self.red_distance * math.sin(self.red_object_angle)
                 print("Red object angle: ", self.red_object_angle)
-                print("red angle with degrees: ", self.get_rotation)
+                print("red angle with degrees: ", self.get_rotation())
             if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
@@ -272,7 +272,7 @@ class Robot:
                 self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
                 self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
                 print("Blue object angle: ", self.blue_object_angle)
-                print("Blue angle with degrees: ", self.get_rotation)
+                print("Blue angle with degrees: ", self.get_rotation())
 
     def reset_rotation(self):
         self.rotation = 0
