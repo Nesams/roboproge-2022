@@ -84,10 +84,10 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.4, 0.004, 0.002, 5)
-        self.right_controller = PIDController(0.4, 0.004, 0.002, 5)
+        self.left_controller = PIDController(0.2, 0.002, 0.001, 5)
+        self.right_controller = PIDController(0.2, 0.002, 0.001, 5)
 
-        self.reset_pid_controller = PIDController(0.4, 0.004, 0.002, 5)
+        self.reset_pid_controller = PIDController(0.2, 0.002, 0.001, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -183,7 +183,7 @@ class Robot:
         else:
             print("Get rotation:  ", self.get_rotation())
             print("angle goal for turning", self.angle_goal_deg)
-            if self.angle_goal_deg - 15 <= self.get_rotation() <= self.angle_goal_deg:
+            if self.angle_goal_deg - 15 <= self.get_rotation() <= self.angle_goal_deg + 2:
                 print("right angle!")
                 self.next_state = "drive_forward"
                 self.drive(0, 0)
@@ -347,6 +347,7 @@ class Robot:
             self.sense()
             self.plan()
             self.act()
+            self.robot.sleep(0.01)
         self.drive(0)
 
 
