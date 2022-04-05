@@ -187,19 +187,19 @@ class Robot:
                 self.next_state = "drive_forward"
                 self.drive(0, 0)
             else:
-                print("Angle Goal: ", self.angle_goal_deg)
+                # print("Angle Goal: ", self.angle_goal_deg)
                 self.drive(1, 1)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
-        print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
-        print("Goal Distance: ", self.goal_distance)
+        # print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
+        # print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
             self.forward_start_time = self.time
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
         distance_traveled = math.sqrt((self.encoder_odometry[0] - self.start_x) ** 2 + (self.encoder_odometry[1] - self.start_y) ** 2)
-        print("Distance traveled: ", distance_traveled)
+        # print("Distance traveled: ", distance_traveled)
         if distance_traveled >= self.goal_distance:
             if self.go_around:
                 self.next_state = "full_scan"
@@ -235,6 +235,7 @@ class Robot:
         print("Left Goal Speed: ", self.left_goal_speed)
         print("Left Actual speed: ", self.left_wheel_speed)
         self.right_goal_speed = min(1 + 2 * turning_rate, 1) * speed
+        print("")
         print("Right Goal Speed: ", self.right_goal_speed)
         print("Right Actual Speed: ", self.right_wheel_speed)
 
