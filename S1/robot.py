@@ -163,8 +163,8 @@ class Robot:
                 self.left_controller.set_desired_pid_speed(0)
                 #self.drive(0, 0)
             else:
-                self.left_controller.set_desired_pid_speed(-200)
-                self.right_controller.set_desired_pid_speed(200)
+                self.left_controller.set_desired_pid_speed(-100)
+                self.right_controller.set_desired_pid_speed(100)
                 #self.drive(1, 1)
                 self.next_state = "full_scan"
 
