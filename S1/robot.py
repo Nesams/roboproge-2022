@@ -165,6 +165,7 @@ class Robot:
                 # if 0 degrees is between the two spheres and blue is on the right side
                 self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + math.radians(180))
                 self.angle_goal_deg = (self.red_object_angle_deg + self.blue_object_angle_deg) / 2 + 180
+                self.angle_goal_deg = self.angle_goal_deg % 360
                 self.go_around = False
                 self.goal_x = (self.red_x + self.blue_x) / 2
                 self.goal_y = (self.red_y + self.blue_y) / 2
