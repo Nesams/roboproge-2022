@@ -335,8 +335,6 @@ class Robot:
         self.states[self.state]()
         self.previous_state = self.state
         self.state = self.next_state
-        self.left_controller = self.reset_pid_controller
-        self.right_encoder = self.reset_pid_controller
 
     def act(self):
         self.calculate_motor_power()
