@@ -152,6 +152,7 @@ class Robot:
                 print("both spheres are on one side of 0 and correct orientation")
                 self.go_around = False
                 self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
+                self.angle_goal_deg = (self.red_object_angle_deg + self.blue_object_angle_deg) / 2
                 self.goal_x = (self.red_x + self.blue_x) / 2
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
@@ -159,6 +160,7 @@ class Robot:
                 print("both spheres are on different sides of 0 and correct orientation")
                 # if 0 degrees is between the two spheres and blue is on the right side
                 self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + math.radians(180))
+                self.angle_goal_deg = (self.red_object_angle_deg + self.blue_object_angle_deg) / 2 + 180
                 self.go_around = False
                 self.goal_x = (self.red_x + self.blue_x) / 2
                 self.goal_y = (self.red_y + self.blue_y) / 2
@@ -171,7 +173,7 @@ class Robot:
                 self.goal_distance = 2 * math.sqrt(((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
             self.next_state = "move_to_point"
         else:
-            if self.angle_goal - math.radians(2) <= self.encoder_odometry[2] <= self.angle_goal + math.radians(2):
+            if self.angle_goal_deg - 1 <= self.get_rotation() <= self.angle_goal_deg + 1:
                 print("right angle!")
                 self.next_state = "drive_forward"
                 self.drive(0, 0)
@@ -258,6 +260,7 @@ class Robot:
                 self.red_distance = 10 / object[2]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
+                self.red_object_angle_deg = self.get_rotation() + red_object_angle
                 red_object_angle = (red_object_angle * math.pi) / 180
                 self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
                 self.red_x = self.red_distance * math.cos(self.red_object_angle)
@@ -270,6 +273,7 @@ class Robot:
                 self.blue_distance = 10 / object[2]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
+                self.blue_object_angle_deg = self.get_rotation() + blue_object_angle
                 blue_object_angle = (blue_object_angle * math.pi) / 180
                 self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
                 self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
