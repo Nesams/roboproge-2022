@@ -154,7 +154,7 @@ class Robot:
         if self.previous_state == "full_scan":
             if math.radians(0) <= (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
                 # if 0 degrees is not between the two spheres and blue is on right side
-                print("both spheres are on one side of 0 and correct orientation")
+                #print("both spheres are on one side of 0 and correct orientation")
                 self.go_around = False
                 self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
                 self.angle_goal_deg = (self.red_object_angle_deg + self.blue_object_angle_deg) / 2
@@ -162,7 +162,7 @@ class Robot:
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
-                print("both spheres are on different sides of 0 and correct orientation")
+                #print("both spheres are on different sides of 0 and correct orientation")
                 # if 0 degrees is between the two spheres and blue is on the right side
                 self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + math.radians(180))
                 self.angle_goal_deg = (self.red_object_angle_deg + self.blue_object_angle_deg) / 2 + 180
@@ -172,7 +172,7 @@ class Robot:
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             else:
-                print("wrong orientation")
+                #print("wrong orientation")
                 self.angle_goal = self.normalize_angle(self.red_object_angle + math.radians(15))
                 if self.angle_goal >= math.radians(360):
                     self.angle_goal -= math.radians(360)
@@ -180,10 +180,10 @@ class Robot:
                 self.goal_distance = 2 * math.sqrt(((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
             self.next_state = "move_to_point"
         else:
-            print("Get rotation:  ", self.get_rotation())
-            print("angle goal for turning", self.angle_goal_deg)
+            #print("Get rotation:  ", self.get_rotation())
+            #print("angle goal for turning", self.angle_goal_deg)
             if self.angle_goal_deg - 15 <= self.get_rotation() <= self.angle_goal_deg + 2:
-                print("right angle!")
+                #print("right angle!")
                 self.next_state = "drive_forward"
                 self.drive(0, 0)
             else:
@@ -258,14 +258,16 @@ class Robot:
             print("left power: ", self.left_power)
             print("")
             self.right_power -= round(self.right_controller.get_correction(right_error))
+            print("right power: ", self.right_power)
+            print("")
 
     def cameradetection(self):
         """Calculating the closest object angle."""
         if len(self.detected_objects) == 0:
             pass
         for object in self.detected_objects:
-            print(object)
-            print("Camera resolution: ", self.robot.CAMERA_RESOLUTION[1])
+            #print(object)
+            #print("Camera resolution: ", self.robot.CAMERA_RESOLUTION[1])
             if object[0] == 'red sphere' and not self.red_object_angle:
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
@@ -277,8 +279,8 @@ class Robot:
                 self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
                 self.red_x = self.red_distance * math.cos(self.red_object_angle)
                 self.red_y = self.red_distance * math.sin(self.red_object_angle)
-                print("Red object angle: ", self.red_object_angle_deg)
-                print("robot angle: ", self.get_rotation())
+                #print("Red object angle: ", self.red_object_angle_deg)
+                #print("robot angle: ", self.get_rotation())
             if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
@@ -290,8 +292,8 @@ class Robot:
                 self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
                 self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
                 self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
-                print("Blue object angle: ", self.blue_object_angle_deg)
-                print("robot angle: ", self.get_rotation())
+                #print("Blue object angle: ", self.blue_object_angle_deg)
+                #print("robot angle: ", self.get_rotation())
 
     def reset_rotation(self):
         """Reset rotation."""
@@ -327,7 +329,7 @@ class Robot:
             self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
                 self.encoder_odometry[2]) * self.delta_time
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
-            print("Odometry:", self.encoder_odometry)
+            #print("Odometry:", self.encoder_odometry)
 
     def plan(self):
         print("State: ", self.state)
