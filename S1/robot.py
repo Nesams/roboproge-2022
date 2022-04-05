@@ -234,11 +234,11 @@ class Robot:
         :return:
         """
         self.left_goal_speed = min(1 - 2 * turning_rate, 1) * speed
-        print("Left Goal Speed: ", self.left_goal_speed)
-        print("Left Actual speed: ", self.left_wheel_speed)
+        #print("Left Goal Speed: ", self.left_goal_speed)
+        #print("Left Actual speed: ", self.left_wheel_speed)
         self.right_goal_speed = min(1 + 2 * turning_rate, 1) * speed
-        print("Right Goal Speed: ", self.right_goal_speed)
-        print("Right Actual Speed: ", self.right_wheel_speed)
+        #print("Right Goal Speed: ", self.right_goal_speed)
+        #print("Right Actual Speed: ", self.right_wheel_speed)
 
     def calculate_motor_power(self):
         """
