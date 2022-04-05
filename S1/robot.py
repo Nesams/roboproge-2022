@@ -196,7 +196,7 @@ class Robot:
         print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
-            self.drive(0, 0)
+
             self.forward_start_time = self.time
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
