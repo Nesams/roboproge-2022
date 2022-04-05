@@ -247,7 +247,7 @@ class Robot:
                 self.red_x = self.red_distance * math.cos(self.red_object_angle)
                 self.red_y = self.red_distance * math.sin(self.red_object_angle)
                 print("Red object angle: ", self.red_object_angle)
-            if object[0] == 'blue sphere':
+            if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
                 self.blue_distance = 10 / object[2]
