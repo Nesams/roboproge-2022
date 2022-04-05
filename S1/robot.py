@@ -84,8 +84,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.6, 0.004, 0.002, 5)
-        self.right_controller = PIDController(0.6, 0.004, 0.002, 5)
+        self.left_controller = PIDController(0.4, 0.004, 0.002, 10)
+        self.right_controller = PIDController(0.4, 0.004, 0.002, 10)
 
 
         self.red_coordinates_xy = ()
@@ -195,7 +195,6 @@ class Robot:
         print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
-
             self.forward_start_time = self.time
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
