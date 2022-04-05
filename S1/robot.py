@@ -236,7 +236,7 @@ class Robot:
         for object in self.detected_objects:
             print(object)
             print("Camera resolution: ", self.robot.CAMERA_RESOLUTION[1])
-            if object[0] == 'red sphere':
+            if object[0] == 'red sphere' and not self.red_object_angle:
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
                 self.red_distance = 10 / object[2]
