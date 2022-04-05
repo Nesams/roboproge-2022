@@ -144,7 +144,7 @@ class Robot:
     def full_scan(self):
         self.cameradetection()
         if self.previous_state == "full_scan":
-            if self.red_object_angle is not None and self.blue_object_angle is not None:
+            if self.get_rotation() > 350 and self.red_object_angle is not None and self.blue_object_angle is not None:
                 self.next_state = "move_to_point"
                 self.drive(0, 0)
             else:
