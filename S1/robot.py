@@ -203,10 +203,12 @@ class Robot:
             if self.angle_goal_deg - 15 <= self.get_rotation() <= self.angle_goal_deg + 2:
                 #print("right angle!")
                 self.next_state = "drive_forward"
-                self.drive(0, 0)
+                self.right_controller.set_desired_pid_speed(0)
+                self.left_controller.set_desired_pid_speed(0)
             else:
                 # print("Angle Goal: ", self.angle_goal_deg)
-                self.drive(1, 1)
+                self.left_controller.set_desired_pid_speed(-25)
+                self.right_controller.set_desired_pid_speed(25)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
@@ -234,7 +236,8 @@ class Robot:
     def stop(self):
         """Default end state."""
         if self.previous_state != "stop":
-            self.drive(0)
+            self.left_controller.set_desired_pid_speed(0)
+            self.right_controller.set_desired_pid_speed(0)
             self.next_state = "stop"
         else:
             self.shutdown = True
