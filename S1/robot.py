@@ -214,7 +214,7 @@ class Robot:
         #         self.blue_object_angle = None
         #         self.next_state = "full_scan"
         #    else:
-            self.drive(1, 0)
+            self.drive(10, 0)
             self.next_state = "drive_forward"
 
     def get_rotation(self):
