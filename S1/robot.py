@@ -278,8 +278,7 @@ class Robot:
         if self.delta_time > 0:
             self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
             self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
-            self.encoder_odometry[2] = (self.wheel_radius / self.robot.AXIS_LENGTH) * (
-                        math.radians(self.right_encoder) - math.radians(self.left_encoder))
+            self.encoder_odometry[2] = self.robot.get_rotation()
             self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
                 self.encoder_odometry[2]) * self.delta_time
             self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
