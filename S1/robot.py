@@ -301,7 +301,7 @@ class Robot:
         self.right_encoder = self.robot.get_right_wheel_encoder()
         self.left_delta = self.left_encoder - self.last_left_encoder
         self.right_delta = self.right_encoder - self.last_right_encoder
-        self.rotation_raw = self.robot.get_rotation
+        self.rotation_raw = self.robot.get_rotation()
         self.rotation = self.rotation_raw - self.rotation_base
         if self.get_rotation() > 360:
             self.reset_rotation()
