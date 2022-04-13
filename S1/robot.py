@@ -50,10 +50,10 @@ class PIDController:
         else:
             return new_pid - previous_pid
 
-    def update_pid(self):
+    def update_pid(self, actual_speed):
 
         self.last_pid = self.pid
-        self.wheel_error_sum += self.wheel_previous_error
+        self.wheel_error_sum += self.wheel_previous_error - actual_speed
         self.wheel_previous_error = self.wheel_distance_ref
         self.pid = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
         self.pid_output += self.increment(self.last_pid, self.pid)
@@ -317,8 +317,8 @@ class Robot:
                 math.radians(self.encoder_odometry[2])) * self.delta_time
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
 
-        self.left_controller.update_pid()
-        self.right_controller.update_pid()
+        self.left_controller.update_pid(math.degrees(self.left_wheel_speed))
+        self.right_controller.update_pid(math.degrees(self.right_wheel_speed))
 
     def plan(self):
         if self.state == "start":
