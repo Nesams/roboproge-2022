@@ -137,7 +137,7 @@ class Robot:
         """Normalizing angle. Range(π...2π)."""
         while angle < 0:
             angle += 360
-        while angle > 2 * math.pi:
+        while angle > 360:
             angle -= 360
         return angle
 
@@ -157,8 +157,8 @@ class Robot:
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
             else:
-                self.left_controller.set_desired_pid_speed(-80)
-                self.right_controller.set_desired_pid_speed(80)
+                self.left_controller.set_desired_pid_speed(-30)
+                self.right_controller.set_desired_pid_speed(30)
 
         else:
             self.state_switch = False
@@ -306,6 +306,8 @@ class Robot:
         if self.delta_time > 0:
             self.left_wheel_speed = math.radians(self.left_encoder - self.last_left_encoder) / self.delta_time
             self.right_wheel_speed = math.radians(self.right_encoder - self.last_right_encoder) / self.delta_time
+            print("Left wheel speed: ", math.degrees(self.left_wheel_speed))
+            print("Right wheel speed: ", math.degrees(self.right_wheel_speed))
             self.encoder_odometry[2] = self.robot.get_rotation()
             self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
                 math.radians(self.encoder_odometry[2])) * self.delta_time
