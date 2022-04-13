@@ -38,6 +38,8 @@ class PIDController:
         self.wheel_distance_ref = 0
         self.pid_output = 0
 
+
+
     def increment(self, previous_pid, new_pid):
         increase = 1
         if abs(abs(previous_pid) - abs(new_pid)) > increase:
@@ -49,6 +51,7 @@ class PIDController:
             return new_pid - previous_pid
 
     def update_pid(self):
+
         self.last_pid = self.pid
         self.wheel_error_sum += self.wheel_previous_error
         self.wheel_previous_error = self.wheel_distance_ref
@@ -144,7 +147,6 @@ class Robot:
     def start(self):
         """Grabbers down."""
         self.robot.set_grabber_height(0)
-        self.robot.sleep(0.3)
         self.state = "full_scan"
 
     def full_scan(self):
