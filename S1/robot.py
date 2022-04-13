@@ -6,7 +6,7 @@ import PiBot
 class PIDController:
     """PID-Controller class."""
 
-    def __init__(self, kp: float = 0.001, ki: float = 0.04, kd: float = 0.001, max_integral=1):
+    def __init__(self, kp: float = 0.4, ki: float = 0.04, kd: float = 0.001, max_integral=1):
         """
         Initialize the PID controller.
 
@@ -104,8 +104,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.001, 0.04, 0.001, 5)
-        self.right_controller = PIDController(0.001, 0.04, 0.001, 5)
+        self.left_controller = PIDController(0.4, 0.04, 0.001, 5)
+        self.right_controller = PIDController(0.4, 0.04, 0.001, 5)
 
 
         self.red_coordinates_xy = ()
