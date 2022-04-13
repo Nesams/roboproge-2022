@@ -157,8 +157,8 @@ class Robot:
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
             else:
-                self.left_controller.set_desired_pid_speed(-8)
-                self.right_controller.set_desired_pid_speed(8)
+                self.left_controller.set_desired_pid_speed(-80)
+                self.right_controller.set_desired_pid_speed(80)
 
         else:
             self.state_switch = False
