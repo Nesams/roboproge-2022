@@ -82,7 +82,6 @@ class Robot:
         self.last_right_encoder = 0
         self.left_delta = 0
         self.right_delta = 0
-        self.forward_start_time = None
 
         self.encoder_odometry = initial_odometry.copy()
         self.wheel_radius = self.robot.WHEEL_DIAMETER / 2
@@ -94,15 +93,6 @@ class Robot:
         self.camera_center = self.camera_resolution / 2
 
         self.state = "start"
-        self.states = {
-            "start": self.start,
-            "full_scan": self.full_scan,
-            "move_to_point": self.move_to_point,
-            "drive_forward": self.drive_forward,
-            "stop": self.stop
-        }
-        self.previous_state = None
-        self.next_state = None
 
         self.left_controller = PIDController(0.3, 0.004, 0.001, 5)
         self.right_controller = PIDController(0.3, 0.004, 0.001, 5)
@@ -128,7 +118,7 @@ class Robot:
         self.rotation_base = 0.0
 
         self.go_around = False
-
+        self.state_switch = True
         self.red_object_angle = None
         self.blue_object_angle = None
 
@@ -159,9 +149,10 @@ class Robot:
 
     def full_scan(self):
         self.cameradetection()
-        if self.previous_state == "full_scan":
+        if self.state_switch is False:
             if self.red_object_angle is not None and self.blue_object_angle is not None:
                 self.state = "move_to_point"
+                self.state_switch = True
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
             else:
@@ -169,71 +160,76 @@ class Robot:
                 self.right_controller.set_desired_pid_speed(8)
 
         else:
+            self.state_switch = False
             self.left_controller.reset()
             self.right_controller.reset()
 
+    def calculate_object_center(self):
+        if 0 <= (self.blue_object_angle - self.red_object_angle) <= 180:
+            # if 0 degrees is not between the two spheres and blue is on right side
+            # print("both spheres are on one side of 0 and correct orientation")
+            self.go_around = False
+            self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
+            self.goal_x = (self.red_x + self.blue_x) / 2
+            self.goal_y = (self.red_y + self.blue_y) / 2
+            self.goal_distance = math.sqrt(
+                ((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
+        elif (self.blue_object_angle - self.red_object_angle) <= -180:
+            # print("both spheres are on different sides of 0 and correct orientation")
+            # if 0 degrees is between the two spheres and blue is on the right side
+            self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + 180)
+            self.go_around = False
+            self.goal_x = (self.red_x + self.blue_x) / 2
+            self.goal_y = (self.red_y + self.blue_y) / 2
+            self.goal_distance = math.sqrt(
+                ((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
+        else:
+            # print("wrong orientation")
+            self.angle_goal = self.normalize_angle(self.red_object_angle + 15)
+            if self.angle_goal >= 360:
+                self.angle_goal -= 360
+            self.go_around = True
+            self.goal_distance = 2 * math.sqrt(
+                ((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
+
     def move_to_point(self):
-        if self.previous_state == "full_scan":
+        if self.state_switch is True:
+            self.state_switch = False
             self.left_controller.reset()
             self.right_controller.reset()
-            if 0 <= (self.blue_object_angle - self.red_object_angle) <= 180:
-                # if 0 degrees is not between the two spheres and blue is on right side
-                #print("both spheres are on one side of 0 and correct orientation")
-                self.go_around = False
-                self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
-                self.goal_x = (self.red_x + self.blue_x) / 2
-                self.goal_y = (self.red_y + self.blue_y) / 2
-                self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
-            elif (self.blue_object_angle - self.red_object_angle) <= -180:
-                #print("both spheres are on different sides of 0 and correct orientation")
-                # if 0 degrees is between the two spheres and blue is on the right side
-                self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + 180)
-                self.go_around = False
-                self.goal_x = (self.red_x + self.blue_x) / 2
-                self.goal_y = (self.red_y + self.blue_y) / 2
-                self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
-            else:
-                #print("wrong orientation")
-                self.angle_goal = self.normalize_angle(self.red_object_angle + 15)
-                if self.angle_goal >= 360:
-                    self.angle_goal -= 360
-                self.go_around = True
-                self.goal_distance = 2 * math.sqrt(((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
-            self.next_state = "move_to_point"
+            self.calculate_object_center()
         else:
             print("Get rotation:  ", self.rotation)
             print("angle goal for turning", self.angle_goal)
-            if self.angle_goal - 15 <= self.rotation <= self.angle_goal + 2:
-                #print("right angle!")
-                self.next_state = "drive_forward"
+            if self.angle_goal - 7 <= self.rotation <= self.angle_goal + 2:
+                self.state = "drive_forward"
+                self.state_switch = True
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
             else:
                 print("Angle Goal: ", self.angle_goal)
                 self.left_controller.set_desired_pid_speed(-8)
                 self.right_controller.set_desired_pid_speed(8)
-                self.next_state = "move_to_point"
 
     def drive_forward(self):
         print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
-        # print("Goal Distance: ", self.goal_distance)
-        if self.previous_state != "drive_forward":
+        if self.state_switch is True:
+            self.state_switch = False
             self.left_controller.reset()
             self.right_controller.reset()
-            self.forward_start_time = self.time
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
         distance_traveled = math.sqrt((self.encoder_odometry[0] - self.start_x) ** 2 + (self.encoder_odometry[1] - self.start_y) ** 2)
         # print("Distance traveled: ", distance_traveled)
         if distance_traveled >= self.goal_distance:
             if self.go_around:
-                self.next_state = "full_scan"
+                self.state = "full_scan"
+                self.state_switch = True
             else:
-                self.next_state = "stop"
+                self.state = "stop"
         else:
             self.left_controller.set_desired_pid_speed(8)
             self.right_controller.set_desired_pid_speed(8)
-            self.next_state = "drive_forward"
 
     def get_rotation(self):
         """Getter method."""
@@ -241,14 +237,10 @@ class Robot:
 
     def stop(self):
         """Default end state."""
-        if self.previous_state != "stop":
-            self.left_controller.reset()
-            self.right_controller.reset()
-            self.left_controller.set_desired_pid_speed(0)
-            self.right_controller.set_desired_pid_speed(0)
-            self.next_state = "stop"
-        else:
-            self.shutdown = True
+        self.left_controller.reset()
+        self.right_controller.reset()
+        self.left_controller.set_desired_pid_speed(0)
+        self.right_controller.set_desired_pid_speed(0)
 
     def cameradetection(self):
         """Calculating the closest object angle."""
@@ -337,9 +329,6 @@ class Robot:
         elif self.state == "stop":
             self.stop()
         print("State: ", self.state)
-        self.states[self.state]()
-        self.previous_state = self.state
-        self.state = self.next_state
 
     def act(self):
         self.robot.set_left_wheel_speed(self.left_controller.get_pid_output())
