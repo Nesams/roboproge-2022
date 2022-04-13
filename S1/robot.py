@@ -167,6 +167,7 @@ class Robot:
             else:
                 self.left_controller.set_desired_pid_speed(-8)
                 self.right_controller.set_desired_pid_speed(8)
+
         else:
             self.left_controller.reset()
             self.right_controller.reset()
