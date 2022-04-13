@@ -18,19 +18,21 @@ class PIDController:
         self.wheel_error_sum = 0
         self.wheel_previous_error = 0
         self.wheel_distance_ref = 0
-        self.pid_output = 0
+        self.pid = 0
         self.kp = kp
         self.ki = ki
         self.kd = kd
         self.last = 0
         self.integral = 0
         self.max_integral = max_integral
+        self.last_pid = 0
+        self.pid_output = 0
 
     def set_desired_pid_speed(self, speed: float):
         self.wheel_distance_ref = speed
 
     def reset(self):
-        self.pid_output = 0
+        self.pid = 0
         self.wheel_error_sum = 0
         self.wheel_previous_error = 0
         self.wheel_distance_ref = 0
@@ -48,10 +50,22 @@ class PIDController:
         self.last = (self.last + error) / 2
         return correction
 
+    def increment(self, previous_pid, new_pid):
+        increase = 1
+        if abs(abs(previous_pid) - abs(new_pid)) > increase:
+            if previous_pid - new_pid < 0:
+                return increase
+            else:
+                return -increase
+        else:
+            return new_pid - previous_pid
+
     def update_pid(self):
+        self.last_pid = self.pid
         self.wheel_error_sum += self.wheel_previous_error
         self.wheel_previous_error = self.wheel_distance_ref
-        self.pid_output = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
+        self.pid = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
+        self.pid_output += self.increment(self.last_pid, self.pid)
 
 
     def get_pid_output(self):
