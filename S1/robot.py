@@ -328,10 +328,10 @@ class Robot:
         self.delta_time = self.time - self.last_time
 
         # Read wheel encoder values
-        self.last_left_encoder = self.left_encoder
+
         self.left_encoder = self.robot.get_left_wheel_encoder()
-        self.last_right_encoder = self.right_encoder
         self.right_encoder = self.robot.get_right_wheel_encoder()
+
         self.left_delta = self.left_encoder - self.last_left_encoder
         self.right_delta = self.right_encoder - self.last_right_encoder
         self.rotation_raw = self.robot.get_rotation()
@@ -356,6 +356,8 @@ class Robot:
             self.left_wheel_distance = (self.left_encoder - self.last_left_encoder) / self.delta_time
             self.right_wheel_distance = (self.right_encoder - self.last_right_encoder) / self.delta_time
 
+        self.last_left_encoder = self.left_encoder
+        self.last_right_encoder = self.right_encoder
         self.left_controller.update_pid()
         self.right_controller.update_pid()
 
