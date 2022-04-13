@@ -304,12 +304,17 @@ class Robot:
         self.delta_time = self.time - self.last_time
 
         # Read wheel encoder values
-
         self.left_encoder = self.robot.get_left_wheel_encoder()
         self.right_encoder = self.robot.get_right_wheel_encoder()
 
-        self.left_delta = self.left_encoder - self.last_left_encoder
-        self.right_delta = self.right_encoder - self.last_right_encoder
+        if self.delta_time != 0:
+            self.left_wheel_distance = (self.left_encoder - self.last_left_encoder) / self.delta_time
+            self.right_wheel_distance = (self.right_encoder - self.last_right_encoder) / self.delta_time
+
+        self.last_left_encoder = self.left_encoder
+        self.last_right_encoder = self.right_encoder
+
+
         self.rotation_raw = self.robot.get_rotation()
         self.rotation = self.rotation_raw - self.rotation_base
         if self.get_rotation() > 360:
@@ -318,8 +323,8 @@ class Robot:
 
         # Odometry
         if self.delta_time > 0:
-            self.left_wheel_speed = math.radians(self.left_delta) / self.delta_time
-            self.right_wheel_speed = math.radians(self.right_delta) / self.delta_time
+            self.left_wheel_speed = math.radians(self.left_encoder - self.last_left_encoder) / self.delta_time
+            self.right_wheel_speed = math.radians(self.right_encoder - self.last_right_encoder) / self.delta_time
             self.encoder_odometry[2] = math.radians(self.robot.get_rotation())
             self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
                 self.encoder_odometry[2]) * self.delta_time
@@ -328,12 +333,6 @@ class Robot:
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
             #print("Odometry:", self.encoder_odometry)
 
-        if self.delta_time != 0:
-            self.left_wheel_distance = (self.left_encoder - self.last_left_encoder) / self.delta_time
-            self.right_wheel_distance = (self.right_encoder - self.last_right_encoder) / self.delta_time
-
-        self.last_left_encoder = self.left_encoder
-        self.last_right_encoder = self.right_encoder
         self.left_controller.update_pid()
         self.right_controller.update_pid()
 
