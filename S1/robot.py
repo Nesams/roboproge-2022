@@ -29,6 +29,12 @@ class PIDController:
     def set_desired_pid_speed(self, speed: float):
         self.wheel_distance_ref = speed
 
+    def reset(self):
+        self.pid_output = 0
+        self.wheel_error_sum = 0
+        self.wheel_previous_error = 0
+        self.wheel_distance_ref = 0
+
     def get_correction(self, error):
         """
         Calculate the error correction using PID.
@@ -46,6 +52,7 @@ class PIDController:
         self.wheel_error_sum += self.wheel_previous_error
         self.wheel_previous_error = self.wheel_distance_ref
         self.pid_output = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
+
 
     def get_pid_output(self):
         return self.pid_output
