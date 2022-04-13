@@ -104,8 +104,8 @@ class Robot:
         self.previous_state = None
         self.next_state = None
 
-        self.left_controller = PIDController(0.4, 0.04, 0.001, 5)
-        self.right_controller = PIDController(0.4, 0.04, 0.001, 5)
+        self.left_controller = PIDController(0.3, 0.004, 0.001, 5)
+        self.right_controller = PIDController(0.3, 0.004, 0.001, 5)
 
 
         self.red_coordinates_xy = ()
@@ -169,8 +169,8 @@ class Robot:
                 self.left_controller.set_desired_pid_speed(0)
                 #self.drive(0, 0)
             else:
-                self.left_controller.set_desired_pid_speed(-15)
-                self.right_controller.set_desired_pid_speed(15)
+                self.left_controller.set_desired_pid_speed(-8)
+                self.right_controller.set_desired_pid_speed(8)
                 #self.drive(1, 1)
                 self.next_state = "full_scan"
         else:
@@ -218,8 +218,8 @@ class Robot:
                 self.left_controller.set_desired_pid_speed(0)
             else:
                 print("Angle Goal: ", self.angle_goal_deg)
-                self.left_controller.set_desired_pid_speed(-15)
-                self.right_controller.set_desired_pid_speed(15)
+                self.left_controller.set_desired_pid_speed(-8)
+                self.right_controller.set_desired_pid_speed(8)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
