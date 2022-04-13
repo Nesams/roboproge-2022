@@ -132,10 +132,6 @@ class Robot:
         self.red_object_angle = None
         self.blue_object_angle = None
 
-        self.red_object_angle_deg = None
-        self.blue_object_angle_deg = None
-
-        self.angle_goal_deg = None
 
         self.red = None
         self.blue = None
@@ -150,9 +146,9 @@ class Robot:
     def normalize_angle(self, angle):
         """Normalizing angle. Range(π...2π)."""
         while angle < 0:
-            angle += 2 * math.pi
+            angle += 360
         while angle > 2 * math.pi:
-            angle -= 2 * math.pi
+            angle -= 360
         return angle
 
     def start(self):
@@ -179,43 +175,40 @@ class Robot:
         if self.previous_state == "full_scan":
             self.left_controller.reset()
             self.right_controller.reset()
-            if math.radians(0) <= (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
+            if 0 <= (self.blue_object_angle - self.red_object_angle) <= 180:
                 # if 0 degrees is not between the two spheres and blue is on right side
                 #print("both spheres are on one side of 0 and correct orientation")
                 self.go_around = False
                 self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
-                self.angle_goal_deg = (self.red_object_angle_deg + self.blue_object_angle_deg) / 2
                 self.goal_x = (self.red_x + self.blue_x) / 2
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
-            elif (self.blue_object_angle - self.red_object_angle) <= math.radians(-180):
+            elif (self.blue_object_angle - self.red_object_angle) <= -180:
                 #print("both spheres are on different sides of 0 and correct orientation")
                 # if 0 degrees is between the two spheres and blue is on the right side
-                self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + math.radians(180))
-                self.angle_goal_deg = (self.red_object_angle_deg + self.blue_object_angle_deg) / 2 + 180
-                self.angle_goal_deg = self.angle_goal_deg % 360
+                self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + 180)
                 self.go_around = False
                 self.goal_x = (self.red_x + self.blue_x) / 2
                 self.goal_y = (self.red_y + self.blue_y) / 2
                 self.goal_distance = math.sqrt(((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
             else:
                 #print("wrong orientation")
-                self.angle_goal = self.normalize_angle(self.red_object_angle + math.radians(15))
-                if self.angle_goal >= math.radians(360):
-                    self.angle_goal -= math.radians(360)
+                self.angle_goal = self.normalize_angle(self.red_object_angle + 15)
+                if self.angle_goal >= 360:
+                    self.angle_goal -= 360
                 self.go_around = True
                 self.goal_distance = 2 * math.sqrt(((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
             self.next_state = "move_to_point"
         else:
-            print("Get rotation:  ", self.get_rotation())
-            print("angle goal for turning", self.angle_goal_deg)
-            if self.angle_goal_deg - 15 <= self.get_rotation() <= self.angle_goal_deg + 2:
+            print("Get rotation:  ", self.rotation)
+            print("angle goal for turning", self.angle_goal)
+            if self.angle_goal - 15 <= self.rotation <= self.angle_goal + 2:
                 #print("right angle!")
                 self.next_state = "drive_forward"
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
             else:
-                print("Angle Goal: ", self.angle_goal_deg)
+                print("Angle Goal: ", self.angle_goal)
                 self.left_controller.set_desired_pid_speed(-8)
                 self.right_controller.set_desired_pid_speed(8)
                 self.next_state = "move_to_point"
@@ -269,11 +262,9 @@ class Robot:
                 self.red_distance = 14 / object[2]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
-                self.red_object_angle_deg = self.get_rotation() + red_object_angle
-                red_object_angle = (red_object_angle * math.pi) / 180
                 self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
-                self.red_x = self.red_distance * math.cos(self.red_object_angle)
-                self.red_y = self.red_distance * math.sin(self.red_object_angle)
+                self.red_x = self.red_distance * math.cos(math.radians(self.red_object_angle))
+                self.red_y = self.red_distance * math.sin(math.radians(self.red_object_angle))
                 #print("Red object angle: ", self.red_object_angle_deg)
                 #print("robot angle: ", self.get_rotation())
             if object[0] == 'blue sphere' and not self.blue_object_angle:
@@ -282,11 +273,9 @@ class Robot:
                 self.blue_distance = 14 / object[2]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
-                self.blue_object_angle_deg = self.get_rotation() + blue_object_angle
-                blue_object_angle = (blue_object_angle * math.pi) / 180
                 self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
-                self.blue_x = self.blue_distance * math.cos(self.blue_object_angle)
-                self.blue_y = self.blue_distance * math.sin(self.blue_object_angle)
+                self.blue_x = self.blue_distance * math.cos(math.radians(self.blue_object_angle))
+                self.blue_y = self.blue_distance * math.sin(math.radians(self.blue_object_angle))
                 #print("Blue object angle: ", self.blue_object_angle_deg)
                 #print("robot angle: ", self.get_rotation())
 
@@ -325,11 +314,11 @@ class Robot:
         if self.delta_time > 0:
             self.left_wheel_speed = math.radians(self.left_encoder - self.last_left_encoder) / self.delta_time
             self.right_wheel_speed = math.radians(self.right_encoder - self.last_right_encoder) / self.delta_time
-            self.encoder_odometry[2] = math.radians(self.robot.get_rotation())
+            self.encoder_odometry[2] = self.robot.get_rotation()
             self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
-                self.encoder_odometry[2]) * self.delta_time
+                math.radians(self.encoder_odometry[2])) * self.delta_time
             self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
-                self.encoder_odometry[2]) * self.delta_time
+                math.radians(self.encoder_odometry[2])) * self.delta_time
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
 
         self.left_controller.update_pid()
