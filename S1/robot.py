@@ -158,21 +158,19 @@ class Robot:
     def start(self):
         """Grabbers down."""
         self.robot.set_grabber_height(0)
-        self.next_state = "full_scan"
+        self.robot.sleep(0.3)
+        self.state = "full_scan"
 
     def full_scan(self):
         self.cameradetection()
         if self.previous_state == "full_scan":
-            if self.get_rotation() > 350 and self.red_object_angle is not None and self.blue_object_angle is not None:
-                self.next_state = "move_to_point"
+            if self.red_object_angle is not None and self.blue_object_angle is not None:
+                self.state = "move_to_point"
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
-                #self.drive(0, 0)
             else:
                 self.left_controller.set_desired_pid_speed(-8)
                 self.right_controller.set_desired_pid_speed(8)
-                #self.drive(1, 1)
-                self.next_state = "full_scan"
         else:
             self.left_controller.reset()
             self.right_controller.reset()
@@ -333,12 +331,21 @@ class Robot:
             self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
                 self.encoder_odometry[2]) * self.delta_time
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
-            #print("Odometry:", self.encoder_odometry)
 
         self.left_controller.update_pid()
         self.right_controller.update_pid()
 
     def plan(self):
+        if self.state == "start":
+            self.start()
+        elif self.state == "full_scan":
+            self.full_scan()
+        elif self.state == "move_to_point":
+            self.move_to_point()
+        elif self.state == "drive_forward":
+            self.drive_forward()
+        elif self.state == "stop":
+            self.stop()
         print("State: ", self.state)
         self.states[self.state]()
         self.previous_state = self.state
