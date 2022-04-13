@@ -377,7 +377,6 @@ class Robot:
             self.sense()
             self.plan()
             self.act()
-            self.robot.sleep(0.01)
 
 
 def main():
