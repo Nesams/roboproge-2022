@@ -232,13 +232,13 @@ class Robot:
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
             else:
-                # print("Angle Goal: ", self.angle_goal_deg)
+                print("Angle Goal: ", self.angle_goal_deg)
                 self.left_controller.set_desired_pid_speed(-15)
                 self.right_controller.set_desired_pid_speed(15)
                 self.next_state = "move_to_point"
 
     def drive_forward(self):
-        # print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
+        print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         # print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
             self.left_controller.reset()
