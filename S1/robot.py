@@ -314,12 +314,14 @@ class Robot:
         self.last_left_encoder = self.left_encoder
         self.last_right_encoder = self.right_encoder
 
-
+        # Rotation
         self.rotation_raw = self.robot.get_rotation()
         self.rotation = self.rotation_raw - self.rotation_base
         if self.get_rotation() > 360:
             self.reset_rotation()
-        self.detected_objects = self.robot.get_camera_objects()
+        # Camera
+        if self.state == "full_scan":
+            self.detected_objects = self.robot.get_camera_objects()
 
         # Odometry
         if self.delta_time > 0:
