@@ -27,7 +27,6 @@ class PIDController:
         self.max_integral = max_integral
 
     def set_desired_pid_speed(self, speed: float):
-        self.wheel_error_sum = 0
         self.wheel_distance_ref = speed
 
     def get_correction(self, error):
@@ -168,9 +167,14 @@ class Robot:
                 self.right_controller.set_desired_pid_speed(15)
                 #self.drive(1, 1)
                 self.next_state = "full_scan"
+        else:
+            self.left_controller.reset()
+            self.right_controller.reset()
 
     def move_to_point(self):
         if self.previous_state == "full_scan":
+            self.left_controller.reset()
+            self.right_controller.reset()
             if math.radians(0) <= (self.blue_object_angle - self.red_object_angle) <= math.radians(180):
                 # if 0 degrees is not between the two spheres and blue is on right side
                 #print("both spheres are on one side of 0 and correct orientation")
@@ -216,6 +220,8 @@ class Robot:
         # print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         # print("Goal Distance: ", self.goal_distance)
         if self.previous_state != "drive_forward":
+            self.left_controller.reset()
+            self.right_controller.reset()
             self.forward_start_time = self.time
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
@@ -238,6 +244,8 @@ class Robot:
     def stop(self):
         """Default end state."""
         if self.previous_state != "stop":
+            self.left_controller.reset()
+            self.right_controller.reset()
             self.left_controller.set_desired_pid_speed(0)
             self.right_controller.set_desired_pid_speed(0)
             self.next_state = "stop"
