@@ -27,6 +27,7 @@ class PIDController:
         self.max_integral = max_integral
 
     def set_desired_pid_speed(self, speed: float):
+        self.wheel_error_sum = 0
         self.wheel_distance_ref = speed
 
     def get_correction(self, error):
