@@ -36,6 +36,7 @@ class PIDController:
         self.wheel_error_sum = 0
         self.wheel_previous_error = 0
         self.wheel_distance_ref = 0
+        self.pid_output = 0
 
     def get_correction(self, error):
         """
@@ -66,7 +67,6 @@ class PIDController:
         self.wheel_previous_error = self.wheel_distance_ref
         self.pid = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
         self.pid_output += self.increment(self.last_pid, self.pid)
-
 
     def get_pid_output(self):
         return self.pid_output
