@@ -391,6 +391,7 @@ class Robot:
             self.sense()
             self.plan()
             self.act()
+            self.robot.sleep(0.05)
 
 
 def main():
