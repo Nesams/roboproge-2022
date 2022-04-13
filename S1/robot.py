@@ -242,24 +242,6 @@ class Robot:
         else:
             self.shutdown = True
 
-    def drive(self, speed: int, turning_rate: float = 0):
-        """
-        Drive the robot at given speed and rotation.
-
-        :param speed: Speed of the faster motor.
-        :param turning_rate: The rate that the robot will turn.
-        Range of -1 to 1
-        0.5 Will turn around a single wheel.
-        :return:
-        """
-        self.left_goal_speed = min(1 - 2 * turning_rate, 1) * speed
-        print("Left Goal Speed: ", self.left_goal_speed)
-        print("Left Actual speed: ", self.left_wheel_speed)
-        self.right_goal_speed = min(1 + 2 * turning_rate, 1) * speed
-        print("")
-        print("Right Goal Speed: ", self.right_goal_speed)
-        print("Right Actual Speed: ", self.right_wheel_speed)
-
     def calculate_motor_power(self):
         """
         Calculate the power for both motor to achieve the desired speed.
@@ -379,7 +361,6 @@ class Robot:
             self.plan()
             self.act()
             self.robot.sleep(0.05)
-        self.drive(0)
 
 
 def main():
