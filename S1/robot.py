@@ -38,19 +38,6 @@ class PIDController:
         self.wheel_distance_ref = 0
         self.pid_output = 0
 
-    def get_correction(self, error):
-        """
-        Calculate the error correction using PID.
-
-        :param error: The difference between desired value and the actual value.
-        :return: Force which needs to be applied to get the correct value.
-        """
-        self.integral += error if error != 0 else -self.integral
-        correction = self.kp * error + self.ki * max(min(self.integral * (error != 0), -self.integral), self.integral) \
-                     + self.kd * (error - self.last)
-        self.last = (self.last + error) / 2
-        return correction
-
     def increment(self, previous_pid, new_pid):
         increase = 1
         if abs(abs(previous_pid) - abs(new_pid)) > increase:
@@ -95,8 +82,6 @@ class Robot:
         self.last_right_encoder = 0
         self.left_delta = 0
         self.right_delta = 0
-        self.left_power = 0
-        self.right_power = 0
         self.forward_start_time = None
 
         self.encoder_odometry = initial_odometry.copy()
@@ -273,28 +258,6 @@ class Robot:
         else:
             self.shutdown = True
 
-    def calculate_motor_power(self):
-        """
-        Calculate the power for both motor to achieve the desired speed.
-        :return: None
-        """
-        if self.left_goal_speed == 0 and self.right_goal_speed == 0:
-            self.left_power = 0
-            self.right_power = 0
-        else:
-            left_error = self.left_wheel_speed - self.left_goal_speed
-            print("Left error: ", left_error)
-            print("")
-            right_error = self.right_wheel_speed - self.right_goal_speed
-            print("Right error: ", right_error)
-            print("")
-            self.left_power -= round(self.left_controller.get_correction(left_error))
-            print("left power: ", self.left_power)
-            print("")
-            self.right_power -= round(self.right_controller.get_correction(right_error))
-            print("right power: ", self.right_power)
-            print("")
-
     def cameradetection(self):
         """Calculating the closest object angle."""
         if len(self.detected_objects) == 0:
@@ -381,7 +344,6 @@ class Robot:
         self.state = self.next_state
 
     def act(self):
-        self.calculate_motor_power()
         self.robot.set_left_wheel_speed(self.left_controller.get_pid_output())
         self.robot.set_right_wheel_speed(self.right_controller.get_pid_output())
 
