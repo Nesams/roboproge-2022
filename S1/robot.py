@@ -53,8 +53,8 @@ class PIDController:
     def update_pid(self, actual_speed):
 
         self.last_pid = self.pid
-        self.wheel_error_sum += self.wheel_previous_error - actual_speed
-        self.wheel_previous_error = self.wheel_distance_ref
+        self.wheel_error_sum += self.wheel_previous_error
+        self.wheel_previous_error = self.wheel_distance_ref - actual_speed
         self.pid = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
         self.pid_output += self.increment(self.last_pid, self.pid)
 
