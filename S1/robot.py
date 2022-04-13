@@ -149,6 +149,7 @@ class Robot:
 
     def full_scan(self):
         self.cameradetection()
+        print("state switch boolean", self.state_switch)
         if self.state_switch is False:
             if self.red_object_angle is not None and self.blue_object_angle is not None:
                 self.state = "move_to_point"
