@@ -240,8 +240,8 @@ class Robot:
             else:
                 self.next_state = "stop"
         else:
-            self.left_controller.set_desired_pid_speed(15)
-            self.right_controller.set_desired_pid_speed(15)
+            self.left_controller.set_desired_pid_speed(8)
+            self.right_controller.set_desired_pid_speed(8)
             self.next_state = "drive_forward"
 
     def get_rotation(self):
