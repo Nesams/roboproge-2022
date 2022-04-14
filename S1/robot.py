@@ -221,8 +221,6 @@ class Robot:
             self.blue_object_angle = None
             self.red_object_angle = None
             self.state_switch = False
-            self.left_controller2.reset()
-            self.right_controller2.reset()
             self.left_goal_speed = math.radians(-100)
             self.right_goal_speed = math.radians(100)
 
@@ -283,6 +281,8 @@ class Robot:
         if distance_traveled >= self.goal_distance + 0.1:
             self.left_controller.set_desired_pid_speed(0)
             self.right_controller.set_desired_pid_speed(0)
+            self.left_controller2.reset()
+            self.right_controller2.reset()
             self.state = "full_scan"
             self.state_switch = True
 
