@@ -212,8 +212,12 @@ class Robot:
             if self.red_object_angle is not None and self.blue_object_angle is not None:
                 if 165 < self.red_object_angle - self.blue_object_angle < 185 or 175 < self.blue_object_angle - self.red_object_angle < 195:
                     self.state = "stop"
-                    self.left_goal_speed = math.radians(0)
-                    self.right_goal_speed = math.radians(0)
+                    if self.red_object_angle + 85 <= self.encoder_odometry[2] <= self.red_object_angle + 95:
+                        self.left_goal_speed = math.radians(0)
+                        self.right_goal_speed = math.radians(0)
+                    else:
+                        self.left_goal_speed = math.radians(-100)
+                        self.right_goal_speed = math.radians(100)
                 else:
                     self.state = "move_to_point"
                     self.state_switch = True
@@ -278,7 +282,7 @@ class Robot:
         print("Distance traveled: ", distance_traveled)
         print("encoder odom x", self.encoder_odometry[0])
         print("encoder odom y", self.encoder_odometry[1])
-        if distance_traveled >= self.goal_distance + 0.1:
+        if distance_traveled >= self.goal_distance:
             self.left_controller.set_desired_pid_speed(0)
             self.right_controller.set_desired_pid_speed(0)
             self.left_controller2.reset()
