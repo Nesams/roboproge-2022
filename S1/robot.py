@@ -15,9 +15,9 @@ class PIDController:
         :param kd: Constant multiplier for the derivative component.
         :param max_integral: Max allowed value for the integral.
         """
-        self.wheel_error_sum = 0
-        self.wheel_previous_error = 0
-        self.wheel_distance_ref = 0
+        self.error_sum = 0
+        self.previous_error = 0
+        self.desired_speed = 0
         self.pid = 0
         self.kp = kp
         self.ki = ki
@@ -27,36 +27,51 @@ class PIDController:
         self.max_integral = max_integral
         self.last_pid = 0
         self.pid_output = 0
+        self.last_encoder = 0
+        self.wheel_distance = 0
 
     def set_desired_pid_speed(self, speed: float):
-        self.wheel_distance_ref = speed
+        self.error_sum = 0
+        self.desired_speed = speed
 
     def reset(self):
         self.pid = 0
-        self.wheel_error_sum = 0
-        self.wheel_previous_error = 0
-        self.wheel_distance_ref = 0
+        self.error_sum = 0
+        self.previous_error = 0
+        self.desired_speed = 0
         self.pid_output = 0
-
-
+        self.last_encoder = 0
+        self.wheel_distance = 0
 
     def increment(self, previous_pid, new_pid):
-        increase = 1
-        if abs(abs(previous_pid) - abs(new_pid)) > increase:
+        if abs(abs(previous_pid) - abs(new_pid)) > 1:
             if previous_pid - new_pid < 0:
-                return increase
+                return 1
             else:
-                return -increase
+                return -1
         else:
             return new_pid - previous_pid
 
-    def update_pid(self, actual_speed):
-
+    def update_pid(self, encoder, delta_time):
         self.last_pid = self.pid
-        self.wheel_error_sum += self.wheel_previous_error
-        self.wheel_previous_error = self.wheel_distance_ref - actual_speed
-        self.pid = self.kp * self.wheel_distance_ref + self.ki * self.wheel_error_sum
-        self.pid_output += self.increment(self.last_pid, self.pid)
+        self.wheel_distance = (encoder - self.last_encoder) / delta_time
+        self.last_encoder = encoder
+        if abs(self.wheel_distance) > 0:
+            low = self.last_pid
+        else:
+            low = 0
+
+        if delta_time != 0:
+            error = self.desired_speed - self.wheel_distance
+            self.error_sum += error * delta_time
+            error_difference = (error - self.previous_error) / delta_time
+            self.previous_error = error
+            self.pid = self.kp * error + self.ki * self.error_sum + self.kd * error_difference
+            self.pid_output += self.increment(self.last_pid, self.pid)
+            if self.desired_speed > 0:
+                self.pid_output = max(self.pid_output, low)
+            else:
+                self.pid_output = min(self.pid_output, -low)
 
     def get_pid_output(self):
         return self.pid_output
@@ -97,9 +112,8 @@ class Robot:
 
         self.state = "start"
 
-        self.left_controller = PIDController(0.3, 0.004, 0.001, 5)
-        self.right_controller = PIDController(0.3, 0.004, 0.001, 5)
-
+        self.left_controller = PIDController(0.0001, 0.04, 0.0001, 5)
+        self.right_controller = PIDController(0.0001, 0.04, 0.0001, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -137,7 +151,7 @@ class Robot:
         self.robot = robot
 
     def normalize_angle(self, angle):
-        """Normalizing angle. Range(π...2π)."""
+        """Normalizing angle. Range(0...360)."""
         while angle < 0:
             angle += 360
         while angle > 360:
@@ -158,14 +172,10 @@ class Robot:
                 self.state_switch = True
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
-            else:
-                self.left_controller.set_desired_pid_speed(-30)
-                self.right_controller.set_desired_pid_speed(30)
-
         else:
             self.state_switch = False
-            self.left_controller.reset()
-            self.right_controller.reset()
+            self.left_controller.set_desired_pid_speed(-100)
+            self.right_controller.set_desired_pid_speed(100)
 
     def calculate_object_center(self):
         if 0 <= (self.blue_object_angle - self.red_object_angle) <= 180:
@@ -196,8 +206,8 @@ class Robot:
     def move_to_point(self):
         if self.state_switch is True:
             self.state_switch = False
-            self.left_controller.reset()
-            self.right_controller.reset()
+            self.left_controller.set_desired_pid_speed(-100)
+            self.right_controller.set_desired_pid_speed(100)
             self.calculate_object_center()
         else:
             print("Get rotation:  ", self.rotation)
@@ -207,30 +217,28 @@ class Robot:
                 self.state_switch = True
                 self.right_controller.set_desired_pid_speed(0)
                 self.left_controller.set_desired_pid_speed(0)
-            else:
-                print("Angle Goal: ", self.angle_goal)
-                self.left_controller.set_desired_pid_speed(-8)
-                self.right_controller.set_desired_pid_speed(8)
+                self.left_controller.reset()
+                self.right_controller.reset()
 
     def drive_forward(self):
         print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         if self.state_switch is True:
             self.state_switch = False
-            self.left_controller.reset()
-            self.right_controller.reset()
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
+            self.left_controller.set_desired_pid_speed(100)
+            self.right_controller.set_desired_pid_speed(100)
+        print("goal distance: ", self.goal_distance)
         distance_traveled = math.sqrt((self.encoder_odometry[0] - self.start_x) ** 2 + (self.encoder_odometry[1] - self.start_y) ** 2)
-        # print("Distance traveled: ", distance_traveled)
+        print("Distance traveled: ", distance_traveled)
+        print("encoder odom x", self.encoder_odometry[0])
+        print("encoder odom y", self.encoder_odometry[1])
         if distance_traveled >= self.goal_distance:
             if self.go_around:
                 self.state = "full_scan"
                 self.state_switch = True
             else:
                 self.state = "stop"
-        else:
-            self.left_controller.set_desired_pid_speed(8)
-            self.right_controller.set_desired_pid_speed(8)
 
     def get_rotation(self):
         """Getter method."""
@@ -238,8 +246,6 @@ class Robot:
 
     def stop(self):
         """Default end state."""
-        self.left_controller.reset()
-        self.right_controller.reset()
         self.left_controller.set_desired_pid_speed(0)
         self.right_controller.set_desired_pid_speed(0)
 
@@ -253,7 +259,7 @@ class Robot:
             if object[0] == 'red sphere' and not self.red_object_angle:
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
-                self.red_distance = 14 / object[2]
+                self.red_distance = 18 / object[2]
                 red_x_difference = self.camera_center - red_coordinates_x
                 red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
                 self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
@@ -264,7 +270,7 @@ class Robot:
             if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
-                self.blue_distance = 14 / object[2]
+                self.blue_distance = 18 / object[2]
                 blue_x_difference = self.camera_center - blue_coordinates_x
                 blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                 self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
@@ -284,16 +290,11 @@ class Robot:
         self.time = self.robot.get_time()
         self.delta_time = self.time - self.last_time
 
+        self.last_left_encoder = self.left_encoder
+        self.last_right_encoder = self.right_encoder
         # Read wheel encoder values
         self.left_encoder = self.robot.get_left_wheel_encoder()
         self.right_encoder = self.robot.get_right_wheel_encoder()
-
-        if self.delta_time != 0:
-            self.left_wheel_distance = (self.left_encoder - self.last_left_encoder) / self.delta_time
-            self.right_wheel_distance = (self.right_encoder - self.last_right_encoder) / self.delta_time
-
-        self.last_left_encoder = self.left_encoder
-        self.last_right_encoder = self.right_encoder
 
         # Rotation
         self.rotation_raw = self.robot.get_rotation()
@@ -308,8 +309,8 @@ class Robot:
         if self.delta_time > 0:
             self.left_wheel_speed = math.radians(self.left_encoder - self.last_left_encoder) / self.delta_time
             self.right_wheel_speed = math.radians(self.right_encoder - self.last_right_encoder) / self.delta_time
-            print("Left wheel speed: ", math.degrees(self.left_wheel_speed))
-            print("Right wheel speed: ", math.degrees(self.right_wheel_speed))
+            print("Left wheel power: ", self.left_controller.get_pid_output())
+            print("Right wheel power: ", self.right_controller.get_pid_output())
             self.encoder_odometry[2] = self.robot.get_rotation()
             self.encoder_odometry[0] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.cos(
                 math.radians(self.encoder_odometry[2])) * self.delta_time
@@ -317,8 +318,8 @@ class Robot:
                 math.radians(self.encoder_odometry[2])) * self.delta_time
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
 
-        self.left_controller.update_pid(math.degrees(self.left_wheel_speed))
-        self.right_controller.update_pid(math.degrees(self.right_wheel_speed))
+        self.left_controller.update_pid(self.left_encoder, self.delta_time)
+        self.right_controller.update_pid(self.right_encoder, self.delta_time)
 
     def plan(self):
         if self.state == "start":
