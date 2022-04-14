@@ -113,9 +113,9 @@ class PIDController:
 
     def get_pid_output(self):
         if self.pid_output > 99:
-            return 99
+            return 15
         elif self.pid_output < -99:
-            return -99
+            return -15
         else:
             return self.pid_output
 
