@@ -168,10 +168,15 @@ class Robot:
         print("state switch boolean", self.state_switch)
         if self.state_switch is False:
             if self.red_object_angle is not None and self.blue_object_angle is not None:
-                self.state = "move_to_point"
-                self.state_switch = True
-                self.right_controller.set_desired_pid_speed(0)
-                self.left_controller.set_desired_pid_speed(0)
+                if 175 < self.red_object_angle - self.blue_object_angle < 185 or 175 < self.blue_object_angle - self.red_object_angle  < 185:
+                    self.state = "stop"
+                    self.right_controller.set_desired_pid_speed(0)
+                    self.left_controller.set_desired_pid_speed(0)
+                else:
+                    self.state = "move_to_point"
+                    self.state_switch = True
+                    self.right_controller.set_desired_pid_speed(0)
+                    self.left_controller.set_desired_pid_speed(0)
         else:
             self.state_switch = False
             self.left_controller.set_desired_pid_speed(-100)
@@ -234,11 +239,8 @@ class Robot:
         print("encoder odom x", self.encoder_odometry[0])
         print("encoder odom y", self.encoder_odometry[1])
         if distance_traveled >= self.goal_distance:
-            if self.go_around:
-                self.state = "full_scan"
-                self.state_switch = True
-            else:
-                self.state = "stop"
+            self.state = "full_scan"
+            self.state_switch = True
 
     def get_rotation(self):
         """Getter method."""
@@ -259,23 +261,31 @@ class Robot:
             if object[0] == 'red sphere' and not self.red_object_angle:
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
-                self.red_distance = 18 / object[2]
-                red_x_difference = self.camera_center - red_coordinates_x
-                red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
-                self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
-                self.red_x = self.red_distance * math.cos(math.radians(self.red_object_angle))
-                self.red_y = self.red_distance * math.sin(math.radians(self.red_object_angle))
+                if self.camera_center - 50 < red_coordinates_x < self.camera_center + 50:
+                    print("got red!")
+                    self.red_distance = self.robot.get_front_middle_laser()
+                    print(self.red_distance)
+                    red_x_difference = self.camera_center - red_coordinates_x
+                    red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
+                    self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
+                    self.red_x = self.red_distance * math.cos(math.radians(self.red_object_angle))
+                    self.red_y = self.red_distance * math.sin(math.radians(self.red_object_angle))
+                # self.red_distance = 16 / object[2]
                 #print("Red object angle: ", self.red_object_angle_deg)
                 #print("robot angle: ", self.get_rotation())
             if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
-                self.blue_distance = 18 / object[2]
-                blue_x_difference = self.camera_center - blue_coordinates_x
-                blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
-                self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
-                self.blue_x = self.blue_distance * math.cos(math.radians(self.blue_object_angle))
-                self.blue_y = self.blue_distance * math.sin(math.radians(self.blue_object_angle))
+                if self.camera_center - 50 < blue_coordinates_x < self.camera_center + 50:
+                    print("got blue!")
+                    self.blue_distance = self.robot.get_front_middle_laser()
+                    print(self.blue_distance)
+                    blue_x_difference = self.camera_center - blue_coordinates_x
+                    blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
+                    self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
+                    self.blue_x = self.blue_distance * math.cos(math.radians(self.blue_object_angle))
+                    self.blue_y = self.blue_distance * math.sin(math.radians(self.blue_object_angle))
+                # self.blue_distance = 16 / object[2]
                 #print("Blue object angle: ", self.blue_object_angle_deg)
                 #print("robot angle: ", self.get_rotation())
 
