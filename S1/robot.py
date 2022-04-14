@@ -112,8 +112,8 @@ class Robot:
 
         self.state = "start"
 
-        self.left_controller = PIDController(0.0001, 0.1, 0.0001, 5)
-        self.right_controller = PIDController(0.0001, 0.1, 0.0001, 5)
+        self.left_controller = PIDController(0.0001, 0.08, 0.0001, 5)
+        self.right_controller = PIDController(0.0001, 0.08, 0.0001, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -217,9 +217,9 @@ class Robot:
             self.right_controller.set_desired_pid_speed(100)
             self.calculate_object_center()
         else:
-            print("Get rotation:  ", self.rotation)
+            print("Get rotation:  ", self.encoder_odometry[2])
             print("angle goal for turning", self.angle_goal)
-            if self.angle_goal - 10 <= self.rotation <= self.angle_goal + 2:
+            if self.angle_goal - 10 <= self.encoder_odometry[2] <= self.angle_goal + 2:
                 self.state = "drive_forward"
                 self.state_switch = True
                 self.right_controller.set_desired_pid_speed(0)
