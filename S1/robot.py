@@ -154,8 +154,8 @@ class Robot:
 
         self.left_controller = PIDController(0.0001, 0.04, 0.0001, 5)
         self.right_controller = PIDController(0.0001, 0.04, 0.0001, 5)
-        self.left_controller2 = PIDController2(0.5, 0.002, 0.002, 10)
-        self.right_controller2 = PIDController2(0.5, 0.002, 0.002, 10)
+        self.left_controller2 = PIDController2(0.0001, 0.03, 0.0002, 5)
+        self.right_controller2 = PIDController2(0.0001, 0.03, 0.0002, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
