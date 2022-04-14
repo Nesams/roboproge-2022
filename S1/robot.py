@@ -380,9 +380,9 @@ class Robot:
             self.encoder_odometry[1] += (self.wheel_radius / 2) * (self.left_wheel_speed + self.right_wheel_speed) * math.sin(
                 math.radians(self.encoder_odometry[2])) * self.delta_time
             self.encoder_odometry[2] = self.normalize_angle(self.encoder_odometry[2])
-
-        self.left_controller.update_pid(self.left_encoder, self.delta_time)
-        self.right_controller.update_pid(self.right_encoder, self.delta_time)
+        if self.state == "drive_forward":
+            self.left_controller.update_pid(self.left_encoder, self.delta_time)
+            self.right_controller.update_pid(self.right_encoder, self.delta_time)
 
     def plan(self):
         if self.state == "start":
