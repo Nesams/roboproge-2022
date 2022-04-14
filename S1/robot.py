@@ -271,6 +271,8 @@ class Robot:
             self.state_switch = False
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
+            self.left_controller.reset()
+            self.right_controller.reset()
             self.left_controller.set_desired_pid_speed(50)
             self.right_controller.set_desired_pid_speed(50)
         print("goal distance: ", self.goal_distance)
