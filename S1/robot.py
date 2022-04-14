@@ -154,8 +154,8 @@ class Robot:
 
         self.left_controller = PIDController(0.0001, 0.04, 0.0001, 5)
         self.right_controller = PIDController(0.0001, 0.04, 0.0001, 5)
-        self.left_controller2 = PIDController2(0.001, 0.01, 0.0002, 5)
-        self.right_controller2 = PIDController2(0.001, 0.01, 0.0002, 5)
+        self.left_controller2 = PIDController2(0.5, 0.002, 0.002, 10)
+        self.right_controller2 = PIDController2(0.5, 0.002, 0.002, 10)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -275,8 +275,8 @@ class Robot:
             self.state_switch = False
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
-            self.left_controller.set_desired_pid_speed(100)
-            self.right_controller.set_desired_pid_speed(100)
+            self.left_controller.set_desired_pid_speed()
+            self.right_controller.set_desired_pid_speed(50)
         print("goal distance: ", self.goal_distance)
         distance_traveled = math.sqrt((self.encoder_odometry[0] - self.start_x) ** 2 + (self.encoder_odometry[1] - self.start_y) ** 2)
         print("Distance traveled: ", distance_traveled)
