@@ -209,7 +209,7 @@ class Robot:
         self.cameradetection()
         print("state switch boolean", self.state_switch)
         if self.state_switch is False:
-            if self.red_object_angle is not None and self.blue_object_angle is not None and self.encoder_odometry[2] >= 350:
+            if self.red_object_angle is not None and self.blue_object_angle is not None:
                 if 175 < self.red_object_angle - self.blue_object_angle < 185 or 175 < self.blue_object_angle - self.red_object_angle < 185:
                     self.state = "stop"
                     self.right_controller.set_desired_pid_speed(0)
