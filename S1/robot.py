@@ -254,7 +254,7 @@ class Robot:
 
     def move_to_point(self):
         if self.state_switch is True:
-            self.state_switch
+            self.state_switch = False
             self.calculate_object_center()
         else:
             print("Get rotation:  ", self.encoder_odometry[2])
