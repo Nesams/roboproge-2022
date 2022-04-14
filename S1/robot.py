@@ -210,10 +210,10 @@ class Robot:
         print("state switch boolean", self.state_switch)
         if self.state_switch is False:
             if self.red_object_angle is not None and self.blue_object_angle is not None:
-                if 175 < self.red_object_angle - self.blue_object_angle < 185 or 175 < self.blue_object_angle - self.red_object_angle < 185:
+                if 170 < self.red_object_angle - self.blue_object_angle < 185 or 175 < self.blue_object_angle - self.red_object_angle < 190:
                     self.state = "stop"
-                    self.right_controller.set_desired_pid_speed(0)
-                    self.left_controller.set_desired_pid_speed(0)
+                    self.left_goal_speed = math.radians(0)
+                    self.right_goal_speed = math.radians(0)
                 else:
                     self.state = "move_to_point"
                     self.state_switch = True
@@ -221,8 +221,8 @@ class Robot:
             self.blue_object_angle = None
             self.red_object_angle = None
             self.state_switch = False
-            self.left_controller.reset()
-            self.right_controller.reset()
+            self.left_controller2.reset()
+            self.right_controller2.reset()
             self.left_goal_speed = math.radians(-100)
             self.right_goal_speed = math.radians(100)
 
@@ -301,7 +301,7 @@ class Robot:
             if object[0] == 'red sphere' and not self.red_object_angle:
                 self.red_coordinates_xy = object[1]
                 red_coordinates_x = self.red_coordinates_xy[0]
-                if self.camera_center - 50 < red_coordinates_x < self.camera_center + 50:
+                if self.camera_center - 60 < red_coordinates_x < self.camera_center + 60:
                     print("got red!")
                     self.red_distance = self.robot.get_front_middle_laser()
                     print(self.red_distance)
@@ -316,7 +316,7 @@ class Robot:
             if object[0] == 'blue sphere' and not self.blue_object_angle:
                 self.blue_coordinates_xy = object[1]
                 blue_coordinates_x = self.blue_coordinates_xy[0]
-                if self.camera_center - 50 < blue_coordinates_x < self.camera_center + 50:
+                if self.camera_center - 60 < blue_coordinates_x < self.camera_center + 60:
                     print("got blue!")
                     self.blue_distance = self.robot.get_front_middle_laser()
                     print(self.blue_distance)
