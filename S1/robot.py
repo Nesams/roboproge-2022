@@ -280,7 +280,7 @@ class Robot:
         print("Distance traveled: ", distance_traveled)
         print("encoder odom x", self.encoder_odometry[0])
         print("encoder odom y", self.encoder_odometry[1])
-        if distance_traveled >= self.goal_distance:
+        if distance_traveled >= self.goal_distance + 0.1:
             self.left_controller.set_desired_pid_speed(0)
             self.right_controller.set_desired_pid_speed(0)
             self.state = "full_scan"
