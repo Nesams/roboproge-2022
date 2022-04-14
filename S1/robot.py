@@ -154,8 +154,8 @@ class Robot:
 
         self.left_controller = PIDController(0.0001, 0.04, 0.0001, 5)
         self.right_controller = PIDController(0.0001, 0.04, 0.0001, 5)
-        self.left_controller2 = PIDController2(0.5, 0.002, 0.002, 10)
-        self.right_controller2 = PIDController2(0.5, 0.002, 0.002, 10)
+        self.left_controller2 = PIDController2(0.05, 0.02, 0.002, 5)
+        self.right_controller2 = PIDController2(0.05, 0.02, 0.002, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -281,6 +281,8 @@ class Robot:
         print("encoder odom x", self.encoder_odometry[0])
         print("encoder odom y", self.encoder_odometry[1])
         if distance_traveled >= self.goal_distance:
+            self.left_controller.set_desired_pid_speed(0)
+            self.right_controller.set_desired_pid_speed(0)
             self.state = "full_scan"
             self.state_switch = True
 
