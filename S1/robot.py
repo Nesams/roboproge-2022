@@ -219,7 +219,7 @@ class Robot:
         else:
             print("Get rotation:  ", self.rotation)
             print("angle goal for turning", self.angle_goal)
-            if self.angle_goal - 55 <= self.rotation <= self.angle_goal + 2:
+            if self.angle_goal - 10 <= self.rotation <= self.angle_goal + 2:
                 self.state = "drive_forward"
                 self.state_switch = True
                 self.right_controller.set_desired_pid_speed(0)
