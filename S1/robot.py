@@ -210,7 +210,7 @@ class Robot:
         print("state switch boolean", self.state_switch)
         if self.state_switch is False:
             if self.red_object_angle is not None and self.blue_object_angle is not None:
-                if 170 < self.red_object_angle - self.blue_object_angle < 185 or 175 < self.blue_object_angle - self.red_object_angle < 190:
+                if 165 < self.red_object_angle - self.blue_object_angle < 185 or 175 < self.blue_object_angle - self.red_object_angle < 195:
                     self.state = "stop"
                     self.left_goal_speed = math.radians(0)
                     self.right_goal_speed = math.radians(0)
