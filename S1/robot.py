@@ -3,6 +3,44 @@ import math
 import PiBot
 
 
+class PIDController2:
+    """PID-Controller class."""
+
+    def __init__(self, kp: float = 1.0, ki: float = 1.0, kd: float = 1.0, max_integral=1):
+        """
+        Initialize the PID controller.
+
+        :param kp: Constant multiplier for proportional component.
+        :param ki: Constant multiplier for the integral component.
+        :param kd: Constant multiplier for the derivative component.
+        :param max_integral: Max allowed value for the integral.
+        """
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+
+        self.last = 0
+        self.integral = 0
+        self.max_integral = max_integral
+
+    def get_correction(self, error):
+        """
+        Calculate the error correction using PID.
+
+        :param error: The difference between desired value and the actual value.
+        :return: Force which needs to be applied to get the correct value.
+        """
+        self.integral += error if error != 0 else -self.integral
+        correction = self.kp * error + self.ki * max(min(self.integral * (error != 0), -self.integral), self.integral) \
+                     + self.kd * (error - self.last)
+        self.last = (self.last + error) / 2
+        return correction
+
+    def reset(self):
+        self.last = 0
+        self.integral = 0
+
+
 class PIDController:
     """PID-Controller class."""
 
@@ -90,6 +128,8 @@ class Robot:
         self.left_wheel_speed = 0
         self.robot = PiBot.PiBot()
         self.detected_objects = []
+        self.left_speed = 0
+        self.right_speed = 0
 
         self.time = 0
         self.last_time = 0
@@ -114,6 +154,8 @@ class Robot:
 
         self.left_controller = PIDController(0.0001, 0.05, 0.0001, 5)
         self.right_controller = PIDController(0.0001, 0.05, 0.0001, 5)
+        self.left_controller2 = PIDController(0.5, 0.002, 0.002, 10)
+        self.right_controller2 = PIDController(0.5, 0.002, 0.002, 10)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
@@ -175,14 +217,14 @@ class Robot:
                 else:
                     self.state = "move_to_point"
                     self.state_switch = True
-                    self.right_controller.set_desired_pid_speed(0)
-                    self.left_controller.set_desired_pid_speed(0)
         else:
             self.blue_object_angle = None
             self.red_object_angle = None
             self.state_switch = False
-            self.left_controller.set_desired_pid_speed(-100)
-            self.right_controller.set_desired_pid_speed(100)
+            self.left_controller.reset()
+            self.right_controller.reset()
+            self.left_goal_speed = math.radians(-100)
+            self.right_goal_speed = math.radians(100)
 
     def calculate_object_center(self):
         if 0 <= (self.blue_object_angle - self.red_object_angle) <= 180:
@@ -212,9 +254,7 @@ class Robot:
 
     def move_to_point(self):
         if self.state_switch is True:
-            self.state_switch = False
-            self.left_controller.set_desired_pid_speed(-100)
-            self.right_controller.set_desired_pid_speed(100)
+            self.state_switch
             self.calculate_object_center()
         else:
             print("Get rotation:  ", self.encoder_odometry[2])
@@ -222,10 +262,8 @@ class Robot:
             if self.angle_goal - 10 <= self.encoder_odometry[2] <= self.angle_goal + 2:
                 self.state = "drive_forward"
                 self.state_switch = True
-                self.right_controller.set_desired_pid_speed(0)
-                self.left_controller.set_desired_pid_speed(0)
-                self.left_controller.reset()
-                self.right_controller.reset()
+                self.right_goal_speed = 0
+                self.left_goal_speed = 0
 
     def drive_forward(self):
         print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
@@ -295,6 +333,19 @@ class Robot:
         """Reset rotation."""
         self.rotation_base = self.rotation_raw
 
+    def calculate_motor_power(self):
+        """
+        Calculate the power for both motor to achieve the desired speed.
+        :return: None
+        """
+        left_error = self.left_wheel_speed - self.left_goal_speed
+        right_error = self.right_wheel_speed - self.right_goal_speed
+        self.left_speed -= round(self.left_controller2.get_correction(left_error))
+        self.right_speed -= round(self.right_controller2.get_correction(right_error))
+        if self.left_goal_speed == 0 and self.right_goal_speed == 0:
+            self.left_speed = 0
+            self.right_speed = 0
+
     def sense(self):
         """SPA architecture sense block."""
         # Read the current time
@@ -347,8 +398,13 @@ class Robot:
         print("State: ", self.state)
 
     def act(self):
-        self.robot.set_left_wheel_speed(self.left_controller.get_pid_output())
-        self.robot.set_right_wheel_speed(self.right_controller.get_pid_output())
+        if self.state == "drive_forward":
+            self.robot.set_left_wheel_speed(self.left_controller.get_pid_output())
+            self.robot.set_right_wheel_speed(self.right_controller.get_pid_output())
+        else:
+            self.calculate_motor_power()
+            self.robot.set_left_wheel_speed(self.left_speed)
+            self.robot.set_right_wheel_speed(self.right_speed)
 
     def spin(self):
         """The spin loop."""
