@@ -112,12 +112,7 @@ class PIDController:
                 self.pid_output = min(self.pid_output, -low)
 
     def get_pid_output(self):
-        if self.pid_output > 99:
-            return 15
-        elif self.pid_output < -99:
-            return -15
-        else:
-            return self.pid_output
+        return self.pid_output
 
 
 class Robot:
@@ -267,6 +262,8 @@ class Robot:
             if self.angle_goal - 15 <= self.encoder_odometry[2] <= self.angle_goal + 2:
                 self.state = "drive_forward"
                 self.state_switch = True
+                self.left_controller.reset()
+                self.right_controller.reset()
                 self.right_goal_speed = 0
                 self.left_goal_speed = 0
 
@@ -276,8 +273,6 @@ class Robot:
             self.state_switch = False
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
-            self.left_controller.reset()
-            self.right_controller.reset()
             self.left_controller.set_desired_pid_speed(50)
             self.right_controller.set_desired_pid_speed(50)
         print("goal distance: ", self.goal_distance)
