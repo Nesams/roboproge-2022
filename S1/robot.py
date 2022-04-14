@@ -112,8 +112,8 @@ class Robot:
 
         self.state = "start"
 
-        self.left_controller = PIDController(0.0001, 0.04, 0.0001, 5)
-        self.right_controller = PIDController(0.0001, 0.04, 0.0001, 5)
+        self.left_controller = PIDController(0.0001, 0.1, 0.0001, 5)
+        self.right_controller = PIDController(0.0001, 0.1, 0.0001, 5)
 
         self.red_coordinates_xy = ()
         self.blue_coordinates_xy = ()
