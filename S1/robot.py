@@ -259,7 +259,7 @@ class Robot:
         else:
             print("Get rotation:  ", self.encoder_odometry[2])
             print("angle goal for turning", self.angle_goal)
-            if self.angle_goal - 10 <= self.encoder_odometry[2] <= self.angle_goal + 2:
+            if self.angle_goal - 15 <= self.encoder_odometry[2] <= self.angle_goal + 2:
                 self.state = "drive_forward"
                 self.state_switch = True
                 self.right_goal_speed = 0
