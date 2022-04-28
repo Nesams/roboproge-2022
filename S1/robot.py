@@ -165,6 +165,8 @@ class Robot:
         self.red_y = None
         self.blue_x = None
         self.blue_y = None
+        self.blue_radius = None
+        self.red_radius = None
 
         self.goal_x = 0
         self.goal_y = 0
@@ -248,7 +250,7 @@ class Robot:
             self.goal_distance = math.sqrt(
                 ((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
         elif self.red_distance >= 0.5 and self.blue_distance >= 0.5:
-            if self.red_distance > self.blue_distance:
+            if self.red_radius <= self.blue_radius:
                 self.angle_goal = self.red_object_angle
             else:
                 self.angle_goal = self.blue_object_angle
@@ -327,7 +329,7 @@ class Robot:
                     self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
                     self.red_x = self.red_distance * math.cos(math.radians(self.red_object_angle))
                     self.red_y = self.red_distance * math.sin(math.radians(self.red_object_angle))
-
+                    self.red_radius = object[2]
                 # self.red_distance = 16 / object[2]
                 #print("Red object angle: ", self.red_object_angle_deg)
                 #print("robot angle: ", self.get_rotation())
@@ -343,6 +345,7 @@ class Robot:
                     self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
                     self.blue_x = self.blue_distance * math.cos(math.radians(self.blue_object_angle))
                     self.blue_y = self.blue_distance * math.sin(math.radians(self.blue_object_angle))
+                    self.blue_radius = object[2]
                 # self.blue_distance = 16 / object[2]
                 #print("Blue object angle: ", self.blue_object_angle_deg)
                 #print("robot angle: ", self.get_rotation())
