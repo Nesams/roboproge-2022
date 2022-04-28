@@ -327,6 +327,7 @@ class Robot:
                     self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
                     self.red_x = self.red_distance * math.cos(math.radians(self.red_object_angle))
                     self.red_y = self.red_distance * math.sin(math.radians(self.red_object_angle))
+
                 # self.red_distance = 16 / object[2]
                 #print("Red object angle: ", self.red_object_angle_deg)
                 #print("robot angle: ", self.get_rotation())
