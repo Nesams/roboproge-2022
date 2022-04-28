@@ -327,8 +327,8 @@ class Robot:
                     red_x_difference = self.camera_center - red_coordinates_x
                     red_object_angle = (red_x_difference / self.camera_resolution) * self.camera_field_of_view
                     self.red_object_angle = self.normalize_angle(red_object_angle + self.encoder_odometry[2])
-                    self.red_x = self.red_distance * math.cos(math.radians(self.red_object_angle))
-                    self.red_y = self.red_distance * math.sin(math.radians(self.red_object_angle))
+                    self.red_x = self.red_distance * math.cos(math.radians(self.red_object_angle)) + self.encoder_odometry[0]
+                    self.red_y = self.red_distance * math.sin(math.radians(self.red_object_angle)) + self.encoder_odometry[1]
                     self.red_radius = object[2]
                 # self.red_distance = 16 / object[2]
                 #print("Red object angle: ", self.red_object_angle_deg)
@@ -343,8 +343,8 @@ class Robot:
                     blue_x_difference = self.camera_center - blue_coordinates_x
                     blue_object_angle = (blue_x_difference / self.camera_resolution) * self.camera_field_of_view
                     self.blue_object_angle = self.normalize_angle(blue_object_angle + self.encoder_odometry[2])
-                    self.blue_x = self.blue_distance * math.cos(math.radians(self.blue_object_angle))
-                    self.blue_y = self.blue_distance * math.sin(math.radians(self.blue_object_angle))
+                    self.blue_x = self.blue_distance * math.cos(math.radians(self.blue_object_angle)) + self.encoder_odometry[0]
+                    self.blue_y = self.blue_distance * math.sin(math.radians(self.blue_object_angle)) + self.encoder_odometry[1]
                     self.blue_radius = object[2]
                 # self.blue_distance = 16 / object[2]
                 #print("Blue object angle: ", self.blue_object_angle_deg)
