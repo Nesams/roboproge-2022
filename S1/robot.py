@@ -251,9 +251,9 @@ class Robot:
                 ((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
         else:
             # print("wrong orientation")
-            self.angle_goal = self.normalize_angle(self.red_object_angle + 25)
+            self.angle_goal = self.normalize_angle(self.red_object_angle + 35)
             self.go_around = True
-            self.goal_distance = math.sqrt(
+            self.goal_distance = 0.2 + math.sqrt(
                 ((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
 
     def find_angle_goal(self):
