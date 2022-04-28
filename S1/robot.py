@@ -289,6 +289,8 @@ class Robot:
     def drive_forward(self):
         print("Angles:  ", self.angle_goal, self.encoder_odometry[2])
         if self.state_switch is True:
+            self.left_controller2.reset()
+            self.right_controller2.reset()
             self.state_switch = False
             self.start_x = self.encoder_odometry[0]
             self.start_y = self.encoder_odometry[1]
