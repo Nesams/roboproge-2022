@@ -213,10 +213,10 @@ class Robot:
         if self.state_switch is False:
             if self.red_object_angle is not None and self.blue_object_angle is not None:
                 if 160 < self.red_object_angle - self.blue_object_angle < 200 or 160 < self.blue_object_angle - self.red_object_angle < 200:
-                    self.state = "stop"
                     if self.red_object_angle + 85 <= self.encoder_odometry[2] <= self.red_object_angle + 95:
                         self.left_goal_speed = math.radians(0)
                         self.right_goal_speed = math.radians(0)
+                        self.state = "stop"
                     else:
                         self.left_goal_speed = math.radians(-100)
                         self.right_goal_speed = math.radians(100)
