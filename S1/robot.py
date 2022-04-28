@@ -236,7 +236,6 @@ class Robot:
             # print("both spheres are on one side of 0 and correct orientation")
             self.find_angle_goal()
             self.go_around = False
-            self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
             self.goal_x = (self.red_x + self.blue_x) / 2
             self.goal_y = (self.red_y + self.blue_y) / 2
             self.goal_distance = math.sqrt(
@@ -244,13 +243,21 @@ class Robot:
         elif (self.blue_object_angle - self.red_object_angle) <= -180:
             # print("both spheres are on different sides of 0 and correct orientation")
             # if 0 degrees is between the two spheres and blue is on the right side
-            self.angle_goal = self.normalize_angle((self.blue_object_angle + self.red_object_angle) / 2 + 180)
+            self.find_angle_goal()
             self.go_around = False
             self.goal_x = (self.red_x + self.blue_x) / 2
             self.goal_y = (self.red_y + self.blue_y) / 2
             self.goal_distance = math.sqrt(
                 ((self.goal_x - self.encoder_odometry[0]) ** 2) + ((self.goal_y - self.encoder_odometry[1]) ** 2))
-        elif self.red_distance >= 0.5 and self.blue_distance >= 0.5:
+        else:
+            # print("wrong orientation")
+            self.angle_goal = self.normalize_angle(self.red_object_angle + 15)
+            self.go_around = True
+            self.goal_distance = 2 * math.sqrt(
+                ((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
+
+    def find_angle_goal(self):
+        if self.red_distance >= 0.5 and self.blue_distance >= 0.5:
             if self.red_radius <= self.blue_radius:
                 self.angle_goal = self.red_object_angle
             else:
@@ -260,11 +267,9 @@ class Robot:
         elif self.blue_distance >= 0.5:
             self.angle_goal = self.blue_object_angle
         else:
-            # print("wrong orientation")
-            self.angle_goal = self.normalize_angle(self.red_object_angle + 15)
-            self.go_around = True
-            self.goal_distance = 2 * math.sqrt(
-                ((self.red_x - self.encoder_odometry[0]) ** 2) + ((self.red_y - self.encoder_odometry[1]) ** 2))
+            self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
+            if (self.blue_object_angle - self.red_object_angle) <= -180:
+                self.angle_goal = self.normalize_angle(self.angle_goal + 180)
 
     def move_to_point(self):
         if self.state_switch is True:
