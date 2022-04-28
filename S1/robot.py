@@ -234,6 +234,7 @@ class Robot:
         if 0 <= (self.blue_object_angle - self.red_object_angle) <= 180:
             # if 0 degrees is not between the two spheres and blue is on right side
             # print("both spheres are on one side of 0 and correct orientation")
+            self.find_angle_goal()
             self.go_around = False
             self.angle_goal = self.normalize_angle((self.red_object_angle + self.blue_object_angle) / 2)
             self.goal_x = (self.red_x + self.blue_x) / 2
