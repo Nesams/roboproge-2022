@@ -63,10 +63,10 @@ class Robot:
             u_att_x = self.attraction_coefficient * (point[0] - goal[0])
             u_att_y = self.attraction_coefficient * (point[1] - goal[1])
         else:
-            u_att_x = (self.attraction_threshold *
-                       self.attraction_coefficient * (point[0] - goal[0])) / d
-            u_att_y = (self.attraction_threshold *
-                       self.attraction_coefficient * (point[1] - goal[1])) / d
+            u_att_x = (self.attraction_threshold
+                       * self.attraction_coefficient * (point[0] - goal[0])) / d
+            u_att_y = (self.attraction_threshold
+                       * self.attraction_coefficient * (point[1] - goal[1])) / d
         return (u_att_x, u_att_y)
 
     def compute_repulsion_gradient(self, point: tuple,
