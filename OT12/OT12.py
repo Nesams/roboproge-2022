@@ -125,6 +125,16 @@ class Robot:
             gradient_X = self.compute_attractor_gradient(current_position, goal)[0] + self.compute_repulsion_gradient(current_position, tuple(self.obstacles))[0]
             gradient_Y = self.compute_attractor_gradient(current_position, goal)[1] + self.compute_repulsion_gradient(current_position, tuple(self.obstacles))[1]
             gradient = [gradient_X, gradient_Y]
+            vector_length = math.sqrt(sum(v ** 2 for v in gradient))
+            if gradient_X == 0:
+                gradient_X = gradient_X
+            else:
+                gradient_X = gradient_X / vector_length
+            if gradient_Y == 0:
+                gradient_Y = gradient_Y
+            else:
+                gradient_Y = gradient_Y / vector_length
+
             position_X = current_position[0] - gradient_X * step_size
             position_Y = current_position[1] - gradient_Y * step_size
             new_position = [position_X, position_Y]
