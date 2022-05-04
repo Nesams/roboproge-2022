@@ -250,7 +250,7 @@ class Robot:
         """
         task_solver = TaskSolver()
         self.map_surroundings()
-        task_solver.generate_world((self.bottom_left[0], self.bottom_left[1]), 10, 10)
+        task_solver.generate_world((self.bottom_left[0], self.bottom_left[1]), 15, 15)
         task_solver.set_sphere_positions(self.sphere_tuple)
         task_solver.set_goals(tuple(self.create_goals(self.objects)))
         task_solver.set_robot_position(0, 0)
