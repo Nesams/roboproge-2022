@@ -156,6 +156,7 @@ class Robot:
         Arguments:
           initial_angle -- initial angle in degrees
         """
+        self.initial_angle = initial_angle
         self.robot = PiBot.PiBot()
         self.cell_size = 0.25
         self.task_solver = TaskSolver()
@@ -196,16 +197,17 @@ class Robot:
             self.current_rotation = self.robot.get_rotation() - self.start_rotation
         self.front_middle_laser = self.robot.get_front_middle_laser()
         self.camera_objects = self.robot.get_camera_objects()
-        if self.front_middle_laser < 2 and len(self.camera_objects) > 0:
-            for o in self.camera_objects:
-                if self.camera_objects[0] not in self.objects.values():
-                    self.objects[((self.front_middle_laser * math.cos(self.current_rotation)) / self.cell_size,
-                                  (self.front_middle_laser * math.sin(self.current_rotation)) / self.cell_size)] = \
-                        (self.increment, self.camera_objects[0], ((self.front_middle_laser
-                                                                   * math.cos(self.current_rotation)) / self.cell_size,
-                                                                  (self.front_middle_laser * math.sin(
-                                                                      self.current_rotation)) / self.cell_size))
-                    self.increment += 1
+        if self.camera_objects is not None:
+            if self.front_middle_laser < 2 and len(self.camera_objects) > 0:
+                for o in self.camera_objects:
+                    if o[0] not in self.objects.values():
+                        self.objects[((self.front_middle_laser * math.cos(self.current_rotation)) / self.cell_size,
+                                      (self.front_middle_laser * math.sin(self.current_rotation)) / self.cell_size)] = \
+                            (self.increment, self.camera_objects[0], ((self.front_middle_laser
+                                                                       * math.cos(self.current_rotation)) / self.cell_size,
+                                                                      (self.front_middle_laser * math.sin(
+                                                                          self.current_rotation)) / self.cell_size))
+                        self.increment += 1
 
     def create_goals(self, world):
         """Create the goals.
